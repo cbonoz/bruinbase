@@ -183,10 +183,13 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
   while (!rf.eof())
   {
     getline(rf,line);
-    parseLoadLine(line, key, value);
+    if (!line.empty()) {
+      parseLoadLine(line, key, value);
+      wf.append(key, value, rid);
+    }
 
     //write to the table file
-    wf.append(key, value, rid);
+      
     //count++;
 
     //TODO add corresponding (key, RecordId) to 
