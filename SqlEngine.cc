@@ -130,9 +130,75 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
   return rc;
 }
 
+
+/*
+
+
+
+
+
+*/
 RC SqlEngine::load(const string& table, const string& loadfile, bool index)
 {
-  /* your code here */
+  RecordFile wf; // RecordFile to store the table
+  ifstream rf(loadfile); //RecordFile for the load file
+  RecordId   rid;  // record cursor for table scanning
+  ifstream idxf;
+
+  RC rc;
+
+  string line;
+  string value;
+
+  int    key;  
+  int    count;
+  int    diff;
+
+
+  // open the table file
+  if ((rc = wf.open(table + ".tbl", 'w') < 0)) {
+    fprintf(stderr, "Error: table %s file could not be opened for writing\n", table.c_str());
+    return rc;
+  }
+
+  if (! rf.is_open()) {
+    fprintf(stderr, "Error: record %s file could not be opening for reading\n", loadfile.c_str());
+    return rc;
+  }
+
+  if (index) {
+
+    idxf.open(table + ".idx");
+    if (! idxf.is_open()) {
+      fprintf(stderr, "Error: Idx %s file could not be opened for writing\n", loadfile.c_str());
+      return rc;
+    }
+
+
+  }
+
+  // initialize the record ID
+  rid.pid = rid.sid = 0;
+
+  while (!rf.eof())
+  {
+    getline(rf,line);
+    parseLoadLine(line, key, value);
+
+    //write to the table file
+    wf.append(key, value, rid);
+    //count++;
+
+    //TODO add corresponding (key, RecordId) to 
+    //idxf for each tuple of the inserted file
+
+  }
+
+
+  wf.close();
+  rf.close();
+    
+   
 
   return 0;
 }
