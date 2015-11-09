@@ -141,7 +141,8 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
 RC SqlEngine::load(const string& table, const string& loadfile, bool index)
 {
   RecordFile wf; // RecordFile to store the table
-  ifstream rf(loadfile); //RecordFile for the load file
+  // The ifstream constructor expects a const char*, so we need to do ifstream file(filename.c_str()); to make it work.
+  ifstream rf(loadfile.c_str()); // RecordFile for the load file
   RecordId   rid;  // record cursor for table scanning
   ifstream idxf;
 
@@ -153,7 +154,6 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
   int    key;  
   int    count;
   int    diff;
-
 
   // open the table file
   if ((rc = wf.open(table + ".tbl", 'w') < 0)) {
@@ -167,14 +167,11 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
   }
 
   if (index) {
-
-    idxf.open(table + ".idx");
+    idxf.open((table + ".idx").c_str());
     if (! idxf.is_open()) {
       fprintf(stderr, "Error: Idx %s file could not be opened for writing\n", loadfile.c_str());
       return rc;
     }
-
-
   }
 
   // initialize the record ID
@@ -194,14 +191,11 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
 
     //TODO add corresponding (key, RecordId) to 
     //idxf for each tuple of the inserted file
-
   }
 
-
   wf.close();
-  rf.close();
-    
-   
+  rf.close();    
+  // idxf.close(); // do not forgot to close the index file if we opened it
 
   return 0;
 }
