@@ -158,8 +158,6 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid)
 	char *entryStart=buffer+L_OFFSET*eid;
 	
 	memcpy(&rid, entryStart, RID_SIZE);
-
-
 	entryStart+=RID_SIZE;
 	memcpy(&key, entryStart, K_SIZE);
 
