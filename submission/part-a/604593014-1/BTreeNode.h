@@ -13,11 +13,6 @@
 #include "RecordFile.h"
 #include "PageFile.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-
-
 /**
  * BTLeafNode: The class representing a B+tree leaf node.
  */
