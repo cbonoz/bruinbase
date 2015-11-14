@@ -18,6 +18,28 @@
 
 
 
+
+#define NONE -1
+
+#define RID_SIZE sizeof(RecordId)
+#define K_SIZE sizeof(int)
+#define V_SIZE sizeof(int)
+#define PID_SIZE sizeof(PageId)
+#define P_SIZE PageFile::PAGE_SIZE
+
+#define N_NL (int) P_SIZE / (K_SIZE + PID_SIZE) + 1
+#define N_L (int) (P_SIZE - PID_SIZE) / (RID_SIZE+K_SIZE) + 1
+
+#define L_OFFSET RID_SIZE+K_SIZE
+#define NL_OFFSET PID_SIZE+K_SIZE
+
+
+#define EC -100 //ERROR CODE
+
+
+
+
+
 /**
  * BTLeafNode: The class representing a B+tree leaf node.
  */
@@ -103,6 +125,29 @@ class BTLeafNode {
     */
     RC write(PageId pid, PageFile& pf);
 
+    void shiftKeysRight(int pos) {
+        //shift element right by one
+        char *loc = buffer+pos*L_OFFSET;
+        memcpy(loc+L_OFFSET,loc,(getKeyCount()-pos)*L_OFFSET);
+    }
+
+    void printKeys() {
+        char *kstart = buffer+RID_SIZE;
+        int kc=getKeyCount();
+        printf("Printing keys for Leaf Node\n");
+        for (int i =0; i < kc;i++) {
+            printf("%d ", *((int *) kstart));
+            kstart+=L_OFFSET;
+        }
+    }
+
+    void initBuffer(char *b, size_t n) {
+        memset(buffer,NONE,P_SIZE);
+        memcpy(buffer,b,n);
+    }
+
+   
+
   private:
    /**
     * The main memory buffer for loading the content of the disk page 
@@ -180,6 +225,33 @@ class BTNonLeafNode {
     * @return 0 if successful. Return an error code if there is an error.
     */
     RC write(PageId pid, PageFile& pf);
+
+    RC locate(int searchKey, int &eid);
+
+    void shiftKeysRight(int pos) {
+        //shift element right by one
+        char *loc = buffer+pos*NL_OFFSET;
+        memcpy(loc+NL_OFFSET,loc,(getKeyCount()-pos)*NL_OFFSET);
+    }
+
+
+    void printKeys() {
+        char *kstart = buffer+PID_SIZE;
+        int kc=getKeyCount();
+        printf("Printing keys for NoNLeaf Node\n");
+        for (int i =0; i < kc;i++) {
+            printf("%d ", *((int *) kstart));
+            kstart+=NL_OFFSET;
+        }
+    }
+
+    void initBuffer(char *b, size_t n) {
+        memset(buffer,NONE,P_SIZE);
+        memcpy(buffer,b,n);
+    }
+
+
+
 
   private:
    /**

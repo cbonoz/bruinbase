@@ -8,25 +8,6 @@ We have these available as well
 
 
 
-#define NONE -1
-
-#define RID_SIZE sizeof(RecordId)
-#define K_SIZE sizeof(int)
-#define V_SIZE sizeof(int)
-#define PID_SIZE sizeof(PageId)
-#define P_SIZE PageFile::PAGE_SIZE
-
-#define N_NL (int) P_SIZE / (K_SIZE + PID_SIZE)
-#define N_L (int) (P_SIZE - PID_SIZE) / (RID_SIZE+K_SIZE)
-
-#define L_OFFSET RID_SIZE+K_SIZE
-#define NL_OFFSET PID_SIZE+K_SIZE
-
-
-#define EC -100 //ERROR CODE
-
-
-
 using namespace std;
 
 /*
@@ -37,8 +18,7 @@ using namespace std;
  */
 RC BTLeafNode::read(PageId pid, const PageFile& pf)
 {
-	
-	return 0;
+	return pf.read(pid,buffer);
 }
     
 /*
@@ -49,9 +29,11 @@ RC BTLeafNode::read(PageId pid, const PageFile& pf)
  */
 RC BTLeafNode::write(PageId pid, PageFile& pf)
 {
-	
-	return 0;
+	return pf.write(pid,buffer);
+
 }
+
+
 
 /*
  * Return the number of keys stored in the node.
@@ -86,9 +68,31 @@ int BTLeafNode::getKeyCount()
  */
 RC BTLeafNode::insert(int key, const RecordId& rid)
 {
+	int pos;
+	/*
+	int kc=getKeyCount();
+	if (kc==N_L-1) {
+		return insertAndSplit(key,rid);
+	} else if (kc>=N_L || kc<0) {
+		return EC;
+	}
+	*/
 
+
+	//find key location
+	BTLeafNode::locate(key,pos);
+	//find copy location
+	char *loc = buffer+pos*L_OFFSET;
+	//shift pairs from pos one space to the right
+	shiftKeysRight(pos);
+	//copy in inserted pair
+	memcpy(loc, &rid, RID_SIZE);
+	memcpy(loc+RID_SIZE, &key, K_SIZE);
 	return 0;
+
 }
+
+
 
 /*
  * Insert the (key, rid) pair to the node
@@ -103,7 +107,37 @@ RC BTLeafNode::insert(int key, const RecordId& rid)
 RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, 
                               BTLeafNode& sibling, int& siblingKey)
 {
+	//number of keys
+	int N = N_L-1;
+	//mid_key is the position to split
+	int mid_key = N/2;
+
+	int pos;
+	BTLeafNode::locate(key, pos);
+
+
 	
+	//pointer to start of right half
+	
+
+	int num_copy = N-mid_key;
+
+	if (pos>mid_key) {
+		num_copy--;
+	}
+
+	char *sib_start = buffer+P_SIZE-(num_copy*L_OFFSET);
+
+	sibling.initBuffer(sib_start,num_copy*L_OFFSET);
+
+	if (pos>mid_key) {
+		//insert in sibling
+		sibling.insert(key,rid);
+	} else {
+		//insert in current node
+		insert(key, rid);
+	}
+
 	return 0;
 }
 
@@ -194,7 +228,7 @@ RC BTLeafNode::setNextNodePtr(PageId pid)
 RC BTNonLeafNode::read(PageId pid, const PageFile& pf)
 {
 	
-	return 0;
+	return pf.read(pid,buffer);
 }
 
 /*
@@ -205,8 +239,8 @@ RC BTNonLeafNode::read(PageId pid, const PageFile& pf)
  */
 RC BTNonLeafNode::write(PageId pid, PageFile& pf)
 {
-	
-	return 0;
+	return pf.write(pid,buffer);
+
 }
 
 /*
@@ -244,6 +278,26 @@ int BTNonLeafNode::getKeyCount()
  */
 RC BTNonLeafNode::insert(int key, PageId pid)
 {
+	int pos;
+	/*
+	int kc=getKeyCount();
+	if (kc==N_NL-1) {
+		return insertAndSplit(key,pid);
+	} else if (kc>=N_NL || kc<0) {
+		return EC;
+	}
+	*/
+
+
+	//find key location
+	locate(key,pos);
+	//find copy location
+	char *loc = buffer+pos*NL_OFFSET;
+	//shift pairs from pos one space to the right
+	shiftKeysRight(pos);
+	//copy in inserted pair
+	memcpy(loc, &pid, PID_SIZE);
+	memcpy(loc+PID_SIZE, &key, K_SIZE);
 	
 	return 0;
 }
@@ -260,6 +314,36 @@ RC BTNonLeafNode::insert(int key, PageId pid)
  */
 RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, int& midKey)
 {
+	//number of keys
+	int N = N_NL-1;
+	//mid_key is the position to split
+	int mid_key = N/2;
+
+	int pos;
+	locate(key, pos);
+
+
+	
+	//pointer to start of right half
+	
+
+	int num_copy = N-mid_key;
+
+	if (pos>mid_key) {
+		num_copy--;
+	}
+
+	char *sib_start = buffer+P_SIZE-(num_copy*NL_OFFSET);
+
+	sibling.initBuffer(sib_start,num_copy*NL_OFFSET);
+
+	if (pos>mid_key) {
+		//insert in sibling
+		sibling.insert(key,pid);
+	} else {
+		//insert in current node
+		insert(key, pid);
+	}
 	
 	return 0;
 }
@@ -273,8 +357,8 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
  */
 RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid)
 {
-	char *kstart=buffer+PID_SIZE;
 	int curKey;
+	char *kstart=buffer+PID_SIZE;
 	char *end = buffer+P_SIZE;
 
 	
@@ -293,6 +377,33 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid)
 	return 0;
 
 	
+}
+
+RC BTNonLeafNode::locate(int searchKey, int &eid) {
+	char *kstart=buffer+PID_SIZE;
+	char *end = buffer+P_SIZE;
+
+
+	int curKey;
+	int i=0;
+	while(kstart < end) {
+		curKey=*((int *) kstart);
+
+		if (curKey==searchKey) {
+			eid=i;
+			return 0;
+		}
+		
+		if (curKey > searchKey) {
+			eid=i-1;
+			return RC_NO_SUCH_RECORD;
+		}
+
+		kstart+=NL_OFFSET;
+		i++;
+	}
+
+	return EC;
 }
 
 /*
