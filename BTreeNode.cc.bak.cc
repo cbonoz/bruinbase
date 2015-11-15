@@ -350,13 +350,8 @@ char *end = buffer+85*8;
 		// printf("BTNonLeafNode::getKeyCount - curPid = %d\n", curPid);
 
 		// if (curKey==NONE)
-		if (curPid==NONE && ( *((int *) (kstart-4)) == NONE)){
+		if (curPid==-1)
 			return max(0,i-1);
-		}
-		else if (curPid==NONE) {
-			return i;
-		}
-		// for our root node, it needs return max(0,i-1);
 		
 		kstart+=8;//integer pointer artihmetric cast to byte
 		i++;
@@ -377,7 +372,7 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 	int pos;
 	//find key location
 	BTNonLeafNode::locate(key,pos);
-	// printf("located key pos = %d\n", pos);
+	printf("located key pos = %d\n", pos);
 	//find copy location
 	// char *loc = buffer+pos*NL_OFFSET;
 	char *loc;
@@ -387,12 +382,10 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 
 	//shift pairs from pos one space to the right
 	BTNonLeafNode::shiftKeysRight(pos);
-	// printf("shifted all the keys to the right\n");
-
 	//copy in inserted pair
-	// printf("copy <pid = %d> in inserted pair\n", pid);
+	printf("copy <pid = %d> in inserted pair\n", pid);
 	memcpy(loc, &pid, PID_SIZE);
-	// printf("copy <key = %d> in inserted pair\n", key);
+	printf("copy <key = %d> in inserted pair\n", key);
 	loc+=PID_SIZE;
 	memcpy(loc, &key, K_SIZE);
 
@@ -477,21 +470,30 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid)
 
 	int idx;
 	locate(searchKey,idx);
-	if(idx >= getKeyCount()) {
-		idx = getKeyCount()-1;
-	}
+
 
 	char *keyLoc = buffer+PID_SIZE+(idx*NL_OFFSET);
+	// char *keyLoc = buffer;
 
+	// keyLoc+=4;
+	// keyLoc+=idx*8;
 	int curKey = *((int *) keyLoc);
 
-	if (searchKey >= curKey) {
+	printf("current location idx before = %d\n", idx+1);
+
+	if (searchKey>=curKey){
 		pid=*((PageId *) (keyLoc+K_SIZE));
-	}
-	else {
+	
+
+	printf("current location idx after = %d\n", idx+1);
+	}else{
 		pid=*((PageId *) (keyLoc-PID_SIZE));
-	}
+	
+
+	printf("current location idx = %d\n", idx);
+}
 	return 0;
+
 }
 
 /**
@@ -506,51 +508,75 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid)
 * @return 0 if searchKey is found. If not, RC_NO_SEARCH_RECORD.
 */
 RC BTNonLeafNode::locate(int searchKey, int &eid) {
-	char *kstart=buffer+PID_SIZE;
-	// char *end = buffer+P_SIZE;
+// 	char *kstart=buffer+PID_SIZE;
+// 	// char *end = buffer+P_SIZE;
+
+// 	int curKey;
+// 	int i;
+// 	printf("BTNonLeafNode::locate - keyCount = %d\n", getKeyCount());
+// 	for(i = 0; i < getKeyCount(); i++) {
+// 		curKey=*((int *) kstart);
+// 		// printf("BTNonLeafNode::locate - currentKey = %d\n", curKey);
+
+// 		if (searchKey == curKey) {
+// 			eid=i;
+// 			printf("Match! eid = %d\n", eid);
+// 			return 0;
+// 		}
+		
+// 		if (searchKey < curKey) {
+// 			eid=i; //the index entry immediately after the largest index key that is smaller than searchKey,
+// 			printf("NO Match... eid = %d\n", eid);
+// 			return RC_NO_SUCH_RECORD;
+// 		}
+
+// kstart += 8;
+		
+// 	}
+// 	// curKey=*((int *) kstart);
+// 	eid = i-1;
+// 	// if (curKey > searchKey)
+// 	// {
+// 	// 	eid=i;
+// 	// } else {
+// 	// eid = i-1;
+// 	// }// we've forgot this
+// 	// printf("NO Match... eid = %d\n", eid);
+// 	return EC;
+
+
+	char *kstart=buffer+RID_SIZE;
 
 	int curKey;
-	int i = 0;
-	// printf("BTNonLeafNode::locate - keyCount = %d\n", getKeyCount());
-	for(int iter = 0; iter < getKeyCount(); iter++) {
-		curKey=*((int *) kstart);
-		// printf("BTNonLeafNode::locate - currentKey = %d\n", curKey);
+	int i=0;
 
-		if (searchKey == curKey) {
+	printf("BTNonLeafNode::locate - keyCount = %d\n", getKeyCount());
+	for (int iter = 0; iter < getKeyCount(); iter++) {
+	// wrong b/c it can go over the whole node if the node is empty
+	// while(kstart < end) {
+		curKey=*((int *) kstart);
+		// printf("BTLeafNode::locate - currentKey = %d\n", curKey);
+
+		if (curKey==searchKey) {
+
 			eid=i;
-			// printf("Match! eid = %d\n", eid);
+		printf("Match! eid = %d\n", eid);
 			return 0;
 		}
 		
-		if (searchKey < curKey) {
+		if (curKey > searchKey) {
 			eid=i; //the index entry immediately after the largest index key that is smaller than searchKey,
-			// printf("NO Match... eid = %d\n", eid);
+
+		printf("NO Match... eid = %d\n", eid);
 			return RC_NO_SUCH_RECORD;
 		}
 
-		kstart+=NL_OFFSET;
-		// printf("i = %d\n", i);
+		kstart+=L_OFFSET;
 		i++;
-		
 	}
-
-	eid = i;
-	// curKey=*((int *) (kstart+NL_OFFSET));
-	// if (curKey < searchKey) {
-
-	// printf("research Key = %d\n", searchKey);
-
-	// printf("curKey = %d\n", curKey);
-	// 	eid--;
-	// }
-	// printf("returning eid = %d\n", eid);
-	// if (curKey > searchKey)
-	// {
-	// 	eid=i;
-	// } else {
-	// eid = i-1;
-	// }// we've forgot this
-	// printf("NO Match... eid = %d\n", eid);
+	// TODO it can has problem!!
+		eid=i;// we've forgot this
+		// printf("NO Match... eid = %d\n", eid);
 	return EC;
 }
 

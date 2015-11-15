@@ -107,14 +107,13 @@ int main()
   nnode.printKeys();
 
   cout<<"Inserting (pid = 3, key = 3) pair to the node."<<endl;
-  nnode.insert(3, 3);
+  nnode.insert(3, 3);nnode.printKeys();
   cout<<"Inserting (pid = 2, key = 2) pair to the node."<<endl;
-  nnode.insert(2, 2);
+  nnode.insert(2, 2);nnode.printKeys();
   cout<<"Inserting (pid = 5, key = 5) pair to the node."<<endl;
-  nnode.insert(5, 5);
+  nnode.insert(5, 5);nnode.printKeys();
   cout<<"Inserting (pid = 7, key = 7) pair to the node."<<endl;
-  nnode.insert(7, 7);
-  nnode.printKeys();
+  nnode.insert(7, 7);nnode.printKeys();
 
   cout<<"currently there are getKeyCount() = " <<nnode.getKeyCount()<<" keys"<<endl;
 
@@ -122,24 +121,35 @@ int main()
   cout<<"looking for pid location for key == 0"<<endl;
   nnode.locateChildPtr(0, pid_loc);
   cout<<"pid_loc is: "<<pid_loc<<endl;
-  cout<<"looking for pid location for key == 4"<<endl;
-  nnode.locateChildPtr(4, pid_loc);
+  cout<<"looking for pid location for key == 3"<<endl;
+  nnode.locateChildPtr(3, pid_loc);
   cout<<"pid_loc is: "<<pid_loc<<endl;
   cout<<"looking for pid location for key == 6"<<endl;
   nnode.locateChildPtr(6, pid_loc);
   cout<<"pid_loc is: "<<pid_loc<<endl;
+  cout<<"looking for pid location for key == 7"<<endl;
+  nnode.locateChildPtr(7, pid_loc);
+  cout<<"pid_loc is: "<<pid_loc<<endl;
+  cout<<"looking for pid location for key == 9"<<endl;
+  nnode.locateChildPtr(9, pid_loc);
+  cout<<"pid_loc is: "<<pid_loc<<endl;
 
-  BTNonLeafNode fullnnode;
+
   cout<<"Testing full non leaf node:"<<endl;
-  for(int i=0; i<N_L; i++) {
+  BTNonLeafNode fullnnode;
+  cout<<"currently there are getKeyCount() = " <<fullnnode.getKeyCount()<<" keys"<<endl;
+  fullnnode.printKeys();
+  // for(int i=0; i<5; i++) {
+  for(int i=0; i<N_L-1; i++) {
    fullnnode.insert(i, i);
+   // fullnnode.printKeys();
   }
   cout<<"currently there are getKeyCount() = " <<fullnnode.getKeyCount()<<" keys"<<endl;
   fullnnode.printKeys();
 
   BTNonLeafNode nonsibling;
   int midkey;
-  fullnnode.insertAndSplit(4, 1, nonsibling, midkey);
+  fullnnode.insertAndSplit(100, 1, nonsibling, midkey);
   cout<<"===After split, the non leaf node has==="<<endl;
   fullnnode.printKeys();
   cout<<"===After split, the sibling non leaf node has==="<<endl;

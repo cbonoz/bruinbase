@@ -284,9 +284,9 @@ class BTNonLeafNode {
         // memcpy(temp,loc,(getKeyCount()-pos)*NL_OFFSET);
         // loc += NL_OFFSET;
         // memcpy(loc, temp, (getKeyCount()-pos)*NL_OFFSET);
-        memcpy(temp,loc,(getKeyCount()-pos)*8);
+        memcpy(temp,loc,(getKeyCount()+1-pos)*8);
         loc += 8;
-        memcpy(loc, temp, (getKeyCount()-pos)*8);
+        memcpy(loc, temp, (getKeyCount()+1-pos)*8);
         free(temp);
         // memcpy(loc+NL_OFFSET,loc,(getKeyCount()-pos)*NL_OFFSET);
     }
@@ -304,8 +304,8 @@ class BTNonLeafNode {
     // }
 
     void initBuffer(char *b, size_t n) {
-        // memset(buffer,NONE,P_SIZE);
-        memset(buffer,0,P_SIZE);
+        memset(buffer,NONE,P_SIZE);
+        // memset(buffer,0,P_SIZE);
         memcpy(buffer,b,n);
     }
 
