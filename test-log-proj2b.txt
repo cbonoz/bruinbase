@@ -1,19 +1,16 @@
-s-164-67-233-169:bruinbase Dale$ ./bruinbase
+Zengwens-MacBook-Air:bruinbase Dale$ ./bruinbase
+Testing leaf node:
+===after initialized node, print node===
 [rid(pid, sid), key]
 
 ---------
-Testing leaf node:
 BTLeafNode::printKeys - Printing keys for Leaf Node
 
-===use another method to print leaf node===
-[rid(pid, sid), key]
-
----------
 currently there are getKeyCount() = 0 keys
 -------------
 set a rid at {1,2}
 Inserting (3, rid) pair to the node.
-NO Match... eid = 0
+BTLeafNode::locate - keyCount = 0
 located key pos = 0
 copy <rid = (1,2)> in inserted pair
 copy <key = 3> in inserted pair
@@ -24,6 +21,7 @@ BTLeafNode::printKeys - Printing keys for Leaf Node
 [(1, 2), 3]	
 ---------
 Inserting (2, rid) pair to the node.
+BTLeafNode::locate - keyCount = 1
 NO Match... eid = 0
 located key pos = 0
 copy <rid = (1,2)> in inserted pair
@@ -34,8 +32,8 @@ BTLeafNode::printKeys - Printing keys for Leaf Node
 [rid(pid, sid), key]
 [(1, 2), 2]	[(1, 2), 3]	
 ---------
-Inserting (5, rid) pair to the node.
-NO Match... eid = 2
+Inserting (4, rid) pair to the node.
+BTLeafNode::locate - keyCount = 2
 located key pos = 2
 copy <rid = (1,2)> in inserted pair
 copy <key = 4> in inserted pair
@@ -45,7 +43,8 @@ BTLeafNode::printKeys - Printing keys for Leaf Node
 [rid(pid, sid), key]
 [(1, 2), 2]	[(1, 2), 3]	[(1, 2), 4]	
 ---------
-Inserting (7, rid) pair to the node.
+Inserting (1, rid) pair to the node.
+BTLeafNode::locate - keyCount = 3
 NO Match... eid = 0
 located key pos = 0
 copy <rid = (1,2)> in inserted pair
@@ -57,328 +56,328 @@ BTLeafNode::printKeys - Printing keys for Leaf Node
 [(1, 2), 1]	[(1, 2), 2]	[(1, 2), 3]	[(1, 2), 4]	
 ---------
 ===set next node ptr to 123===
-Next node ptr is: -133
-NO Match... eid = 4
+Next node ptr is: 123
+BTLeafNode::locate - keyCount = 4
 located key pos = 4
 copy <rid = (1,2)> in inserted pair
 copy <key = 6> in inserted pair
-NO Match... eid = 5
+BTLeafNode::locate - keyCount = 5
 located key pos = 5
 copy <rid = (1,2)> in inserted pair
 copy <key = 7> in inserted pair
-NO Match... eid = 6
+BTLeafNode::locate - keyCount = 6
 located key pos = 6
 copy <rid = (1,2)> in inserted pair
 copy <key = 8> in inserted pair
-NO Match... eid = 7
+BTLeafNode::locate - keyCount = 7
 located key pos = 7
 copy <rid = (1,2)> in inserted pair
 copy <key = 9> in inserted pair
-NO Match... eid = 8
+BTLeafNode::locate - keyCount = 8
 located key pos = 8
 copy <rid = (1,2)> in inserted pair
 copy <key = 10> in inserted pair
-NO Match... eid = 9
+BTLeafNode::locate - keyCount = 9
 located key pos = 9
 copy <rid = (1,2)> in inserted pair
 copy <key = 11> in inserted pair
-NO Match... eid = 10
+BTLeafNode::locate - keyCount = 10
 located key pos = 10
 copy <rid = (1,2)> in inserted pair
 copy <key = 12> in inserted pair
-NO Match... eid = 11
+BTLeafNode::locate - keyCount = 11
 located key pos = 11
 copy <rid = (1,2)> in inserted pair
 copy <key = 13> in inserted pair
-NO Match... eid = 12
+BTLeafNode::locate - keyCount = 12
 located key pos = 12
 copy <rid = (1,2)> in inserted pair
 copy <key = 14> in inserted pair
-NO Match... eid = 13
+BTLeafNode::locate - keyCount = 13
 located key pos = 13
 copy <rid = (1,2)> in inserted pair
 copy <key = 15> in inserted pair
-NO Match... eid = 14
+BTLeafNode::locate - keyCount = 14
 located key pos = 14
 copy <rid = (1,2)> in inserted pair
 copy <key = 16> in inserted pair
-NO Match... eid = 15
+BTLeafNode::locate - keyCount = 15
 located key pos = 15
 copy <rid = (1,2)> in inserted pair
 copy <key = 17> in inserted pair
-NO Match... eid = 16
+BTLeafNode::locate - keyCount = 16
 located key pos = 16
 copy <rid = (1,2)> in inserted pair
 copy <key = 18> in inserted pair
-NO Match... eid = 17
+BTLeafNode::locate - keyCount = 17
 located key pos = 17
 copy <rid = (1,2)> in inserted pair
 copy <key = 19> in inserted pair
-NO Match... eid = 18
+BTLeafNode::locate - keyCount = 18
 located key pos = 18
 copy <rid = (1,2)> in inserted pair
 copy <key = 20> in inserted pair
-NO Match... eid = 19
+BTLeafNode::locate - keyCount = 19
 located key pos = 19
 copy <rid = (1,2)> in inserted pair
 copy <key = 21> in inserted pair
-NO Match... eid = 20
+BTLeafNode::locate - keyCount = 20
 located key pos = 20
 copy <rid = (1,2)> in inserted pair
 copy <key = 22> in inserted pair
-NO Match... eid = 21
+BTLeafNode::locate - keyCount = 21
 located key pos = 21
 copy <rid = (1,2)> in inserted pair
 copy <key = 23> in inserted pair
-NO Match... eid = 22
+BTLeafNode::locate - keyCount = 22
 located key pos = 22
 copy <rid = (1,2)> in inserted pair
 copy <key = 24> in inserted pair
-NO Match... eid = 23
+BTLeafNode::locate - keyCount = 23
 located key pos = 23
 copy <rid = (1,2)> in inserted pair
 copy <key = 25> in inserted pair
-NO Match... eid = 24
+BTLeafNode::locate - keyCount = 24
 located key pos = 24
 copy <rid = (1,2)> in inserted pair
 copy <key = 26> in inserted pair
-NO Match... eid = 25
+BTLeafNode::locate - keyCount = 25
 located key pos = 25
 copy <rid = (1,2)> in inserted pair
 copy <key = 27> in inserted pair
-NO Match... eid = 26
+BTLeafNode::locate - keyCount = 26
 located key pos = 26
 copy <rid = (1,2)> in inserted pair
 copy <key = 28> in inserted pair
-NO Match... eid = 27
+BTLeafNode::locate - keyCount = 27
 located key pos = 27
 copy <rid = (1,2)> in inserted pair
 copy <key = 29> in inserted pair
-NO Match... eid = 28
+BTLeafNode::locate - keyCount = 28
 located key pos = 28
 copy <rid = (1,2)> in inserted pair
 copy <key = 30> in inserted pair
-NO Match... eid = 29
+BTLeafNode::locate - keyCount = 29
 located key pos = 29
 copy <rid = (1,2)> in inserted pair
 copy <key = 31> in inserted pair
-NO Match... eid = 30
+BTLeafNode::locate - keyCount = 30
 located key pos = 30
 copy <rid = (1,2)> in inserted pair
 copy <key = 32> in inserted pair
-NO Match... eid = 31
+BTLeafNode::locate - keyCount = 31
 located key pos = 31
 copy <rid = (1,2)> in inserted pair
 copy <key = 33> in inserted pair
-NO Match... eid = 32
+BTLeafNode::locate - keyCount = 32
 located key pos = 32
 copy <rid = (1,2)> in inserted pair
 copy <key = 34> in inserted pair
-NO Match... eid = 33
+BTLeafNode::locate - keyCount = 33
 located key pos = 33
 copy <rid = (1,2)> in inserted pair
 copy <key = 35> in inserted pair
-NO Match... eid = 34
+BTLeafNode::locate - keyCount = 34
 located key pos = 34
 copy <rid = (1,2)> in inserted pair
 copy <key = 36> in inserted pair
-NO Match... eid = 35
+BTLeafNode::locate - keyCount = 35
 located key pos = 35
 copy <rid = (1,2)> in inserted pair
 copy <key = 37> in inserted pair
-NO Match... eid = 36
+BTLeafNode::locate - keyCount = 36
 located key pos = 36
 copy <rid = (1,2)> in inserted pair
 copy <key = 38> in inserted pair
-NO Match... eid = 37
+BTLeafNode::locate - keyCount = 37
 located key pos = 37
 copy <rid = (1,2)> in inserted pair
 copy <key = 39> in inserted pair
-NO Match... eid = 38
+BTLeafNode::locate - keyCount = 38
 located key pos = 38
 copy <rid = (1,2)> in inserted pair
 copy <key = 40> in inserted pair
-NO Match... eid = 39
+BTLeafNode::locate - keyCount = 39
 located key pos = 39
 copy <rid = (1,2)> in inserted pair
 copy <key = 41> in inserted pair
-NO Match... eid = 40
+BTLeafNode::locate - keyCount = 40
 located key pos = 40
 copy <rid = (1,2)> in inserted pair
 copy <key = 42> in inserted pair
-NO Match... eid = 41
+BTLeafNode::locate - keyCount = 41
 located key pos = 41
 copy <rid = (1,2)> in inserted pair
 copy <key = 43> in inserted pair
-NO Match... eid = 42
+BTLeafNode::locate - keyCount = 42
 located key pos = 42
 copy <rid = (1,2)> in inserted pair
 copy <key = 44> in inserted pair
-NO Match... eid = 43
+BTLeafNode::locate - keyCount = 43
 located key pos = 43
 copy <rid = (1,2)> in inserted pair
 copy <key = 45> in inserted pair
-NO Match... eid = 44
+BTLeafNode::locate - keyCount = 44
 located key pos = 44
 copy <rid = (1,2)> in inserted pair
 copy <key = 46> in inserted pair
-NO Match... eid = 45
+BTLeafNode::locate - keyCount = 45
 located key pos = 45
 copy <rid = (1,2)> in inserted pair
 copy <key = 47> in inserted pair
-NO Match... eid = 46
+BTLeafNode::locate - keyCount = 46
 located key pos = 46
 copy <rid = (1,2)> in inserted pair
 copy <key = 48> in inserted pair
-NO Match... eid = 47
+BTLeafNode::locate - keyCount = 47
 located key pos = 47
 copy <rid = (1,2)> in inserted pair
 copy <key = 49> in inserted pair
-NO Match... eid = 48
+BTLeafNode::locate - keyCount = 48
 located key pos = 48
 copy <rid = (1,2)> in inserted pair
 copy <key = 50> in inserted pair
-NO Match... eid = 49
+BTLeafNode::locate - keyCount = 49
 located key pos = 49
 copy <rid = (1,2)> in inserted pair
 copy <key = 51> in inserted pair
-NO Match... eid = 50
+BTLeafNode::locate - keyCount = 50
 located key pos = 50
 copy <rid = (1,2)> in inserted pair
 copy <key = 52> in inserted pair
-NO Match... eid = 51
+BTLeafNode::locate - keyCount = 51
 located key pos = 51
 copy <rid = (1,2)> in inserted pair
 copy <key = 53> in inserted pair
-NO Match... eid = 52
+BTLeafNode::locate - keyCount = 52
 located key pos = 52
 copy <rid = (1,2)> in inserted pair
 copy <key = 54> in inserted pair
-NO Match... eid = 53
+BTLeafNode::locate - keyCount = 53
 located key pos = 53
 copy <rid = (1,2)> in inserted pair
 copy <key = 55> in inserted pair
-NO Match... eid = 54
+BTLeafNode::locate - keyCount = 54
 located key pos = 54
 copy <rid = (1,2)> in inserted pair
 copy <key = 56> in inserted pair
-NO Match... eid = 55
+BTLeafNode::locate - keyCount = 55
 located key pos = 55
 copy <rid = (1,2)> in inserted pair
 copy <key = 57> in inserted pair
-NO Match... eid = 56
+BTLeafNode::locate - keyCount = 56
 located key pos = 56
 copy <rid = (1,2)> in inserted pair
 copy <key = 58> in inserted pair
-NO Match... eid = 57
+BTLeafNode::locate - keyCount = 57
 located key pos = 57
 copy <rid = (1,2)> in inserted pair
 copy <key = 59> in inserted pair
-NO Match... eid = 58
+BTLeafNode::locate - keyCount = 58
 located key pos = 58
 copy <rid = (1,2)> in inserted pair
 copy <key = 60> in inserted pair
-NO Match... eid = 59
+BTLeafNode::locate - keyCount = 59
 located key pos = 59
 copy <rid = (1,2)> in inserted pair
 copy <key = 61> in inserted pair
-NO Match... eid = 60
+BTLeafNode::locate - keyCount = 60
 located key pos = 60
 copy <rid = (1,2)> in inserted pair
 copy <key = 62> in inserted pair
-NO Match... eid = 61
+BTLeafNode::locate - keyCount = 61
 located key pos = 61
 copy <rid = (1,2)> in inserted pair
 copy <key = 63> in inserted pair
-NO Match... eid = 62
+BTLeafNode::locate - keyCount = 62
 located key pos = 62
 copy <rid = (1,2)> in inserted pair
 copy <key = 64> in inserted pair
-NO Match... eid = 63
+BTLeafNode::locate - keyCount = 63
 located key pos = 63
 copy <rid = (1,2)> in inserted pair
 copy <key = 65> in inserted pair
-NO Match... eid = 64
+BTLeafNode::locate - keyCount = 64
 located key pos = 64
 copy <rid = (1,2)> in inserted pair
 copy <key = 66> in inserted pair
-NO Match... eid = 65
+BTLeafNode::locate - keyCount = 65
 located key pos = 65
 copy <rid = (1,2)> in inserted pair
 copy <key = 67> in inserted pair
-NO Match... eid = 66
+BTLeafNode::locate - keyCount = 66
 located key pos = 66
 copy <rid = (1,2)> in inserted pair
 copy <key = 68> in inserted pair
-NO Match... eid = 67
+BTLeafNode::locate - keyCount = 67
 located key pos = 67
 copy <rid = (1,2)> in inserted pair
 copy <key = 69> in inserted pair
-NO Match... eid = 68
+BTLeafNode::locate - keyCount = 68
 located key pos = 68
 copy <rid = (1,2)> in inserted pair
 copy <key = 70> in inserted pair
-NO Match... eid = 69
+BTLeafNode::locate - keyCount = 69
 located key pos = 69
 copy <rid = (1,2)> in inserted pair
 copy <key = 71> in inserted pair
-NO Match... eid = 70
+BTLeafNode::locate - keyCount = 70
 located key pos = 70
 copy <rid = (1,2)> in inserted pair
 copy <key = 72> in inserted pair
-NO Match... eid = 71
+BTLeafNode::locate - keyCount = 71
 located key pos = 71
 copy <rid = (1,2)> in inserted pair
 copy <key = 73> in inserted pair
-NO Match... eid = 72
+BTLeafNode::locate - keyCount = 72
 located key pos = 72
 copy <rid = (1,2)> in inserted pair
 copy <key = 74> in inserted pair
-NO Match... eid = 73
+BTLeafNode::locate - keyCount = 73
 located key pos = 73
 copy <rid = (1,2)> in inserted pair
 copy <key = 75> in inserted pair
-NO Match... eid = 74
+BTLeafNode::locate - keyCount = 74
 located key pos = 74
 copy <rid = (1,2)> in inserted pair
 copy <key = 76> in inserted pair
-NO Match... eid = 75
+BTLeafNode::locate - keyCount = 75
 located key pos = 75
 copy <rid = (1,2)> in inserted pair
 copy <key = 77> in inserted pair
-NO Match... eid = 76
+BTLeafNode::locate - keyCount = 76
 located key pos = 76
 copy <rid = (1,2)> in inserted pair
 copy <key = 78> in inserted pair
-NO Match... eid = 77
+BTLeafNode::locate - keyCount = 77
 located key pos = 77
 copy <rid = (1,2)> in inserted pair
 copy <key = 79> in inserted pair
-NO Match... eid = 78
+BTLeafNode::locate - keyCount = 78
 located key pos = 78
 copy <rid = (1,2)> in inserted pair
 copy <key = 80> in inserted pair
-NO Match... eid = 79
+BTLeafNode::locate - keyCount = 79
 located key pos = 79
 copy <rid = (1,2)> in inserted pair
 copy <key = 81> in inserted pair
-NO Match... eid = 80
+BTLeafNode::locate - keyCount = 80
 located key pos = 80
 copy <rid = (1,2)> in inserted pair
 copy <key = 82> in inserted pair
-NO Match... eid = 81
+BTLeafNode::locate - keyCount = 81
 located key pos = 81
 copy <rid = (1,2)> in inserted pair
 copy <key = 83> in inserted pair
-NO Match... eid = 82
+BTLeafNode::locate - keyCount = 82
 located key pos = 82
 copy <rid = (1,2)> in inserted pair
 copy <key = 84> in inserted pair
-NO Match... eid = 83
+BTLeafNode::locate - keyCount = 83
 located key pos = 83
 copy <rid = (1,2)> in inserted pair
 copy <key = 85> in inserted pair
-NO Match... eid = 84
+BTLeafNode::locate - keyCount = 84
 located key pos = 84
 copy <rid = (1,2)> in inserted pair
 copy <key = 86> in inserted pair
@@ -388,64 +387,22 @@ BTLeafNode::printKeys - Printing keys for Leaf Node
 [(1, 2), 1]	[(1, 2), 2]	[(1, 2), 3]	[(1, 2), 4]	[(1, 2), 6]	[(1, 2), 7]	[(1, 2), 8]	[(1, 2), 9]	[(1, 2), 10]	[(1, 2), 11]	[(1, 2), 12]	[(1, 2), 13]	[(1, 2), 14]	[(1, 2), 15]	[(1, 2), 16]	[(1, 2), 17]	[(1, 2), 18]	[(1, 2), 19]	[(1, 2), 20]	[(1, 2), 21]	[(1, 2), 22]	[(1, 2), 23]	[(1, 2), 24]	[(1, 2), 25]	[(1, 2), 26]	[(1, 2), 27]	[(1, 2), 28]	[(1, 2), 29]	[(1, 2), 30]	[(1, 2), 31]	[(1, 2), 32]	[(1, 2), 33]	[(1, 2), 34]	[(1, 2), 35]	[(1, 2), 36]	[(1, 2), 37]	[(1, 2), 38]	[(1, 2), 39]	[(1, 2), 40]	[(1, 2), 41]	[(1, 2), 42]	[(1, 2), 43]	[(1, 2), 44]	[(1, 2), 45]	[(1, 2), 46]	[(1, 2), 47]	[(1, 2), 48]	[(1, 2), 49]	[(1, 2), 50]	[(1, 2), 51]	[(1, 2), 52]	[(1, 2), 53]	[(1, 2), 54]	[(1, 2), 55]	[(1, 2), 56]	[(1, 2), 57]	[(1, 2), 58]	[(1, 2), 59]	[(1, 2), 60]	[(1, 2), 61]	[(1, 2), 62]	[(1, 2), 63]	[(1, 2), 64]	[(1, 2), 65]	[(1, 2), 66]	[(1, 2), 67]	[(1, 2), 68]	[(1, 2), 69]	[(1, 2), 70]	[(1, 2), 71]	[(1, 2), 72]	[(1, 2), 73]	[(1, 2), 74]	[(1, 2), 75]	[(1, 2), 76]	[(1, 2), 77]	[(1, 2), 78]	[(1, 2), 79]	[(1, 2), 80]	[(1, 2), 81]	[(1, 2), 82]	[(1, 2), 83]	[(1, 2), 84]	[(1, 2), 85]	[(1, 2), 86]	
 ---------
 *Inserting (5, rid) pair to split the node.
-NO Match... eid = 3
-NO Match... eid = 3
-located key pos = 3
+BTLeafNode::insertAndSplit - mid_key is 42
+BTLeafNode::locate - keyCount = 85
+NO Match... eid = 4
+BTLeafNode::insertAndSplit - we should copy 43 keys
+BTLeafNode::insertAndSplit - insert in current node
+BTLeafNode::locate - keyCount = 42
+NO Match... eid = 4
+located key pos = 4
 copy <rid = (1,2)> in inserted pair
 copy <key = 5> in inserted pair
 ===After split, the leaf node has===
 [rid(pid, sid), key]
-[(1, 2), 1]	[(1, 2), 2]	[(1, 2), 3]	[(1, 2), 5]	[(1, 2), 4]	[(1, 2), 6]	[(1, 2), 7]	[(1, 2), 8]	[(1, 2), 9]	[(1, 2), 10]	[(1, 2), 11]	[(1, 2), 12]	[(1, 2), 13]	[(1, 2), 14]	[(1, 2), 15]	[(1, 2), 16]	[(1, 2), 17]	[(1, 2), 18]	[(1, 2), 19]	[(1, 2), 20]	[(1, 2), 21]	[(1, 2), 22]	[(1, 2), 23]	[(1, 2), 24]	[(1, 2), 25]	[(1, 2), 26]	[(1, 2), 27]	[(1, 2), 28]	[(1, 2), 29]	[(1, 2), 30]	[(1, 2), 31]	[(1, 2), 32]	[(1, 2), 33]	[(1, 2), 34]	[(1, 2), 35]	[(1, 2), 36]	[(1, 2), 37]	[(1, 2), 38]	[(1, 2), 39]	[(1, 2), 40]	[(1, 2), 41]	[(1, 2), 42]	[(1, 2), 43]	
+[(1, 2), 1]	[(1, 2), 2]	[(1, 2), 3]	[(1, 2), 4]	[(1, 2), 5]	[(1, 2), 6]	[(1, 2), 7]	[(1, 2), 8]	[(1, 2), 9]	[(1, 2), 10]	[(1, 2), 11]	[(1, 2), 12]	[(1, 2), 13]	[(1, 2), 14]	[(1, 2), 15]	[(1, 2), 16]	[(1, 2), 17]	[(1, 2), 18]	[(1, 2), 19]	[(1, 2), 20]	[(1, 2), 21]	[(1, 2), 22]	[(1, 2), 23]	[(1, 2), 24]	[(1, 2), 25]	[(1, 2), 26]	[(1, 2), 27]	[(1, 2), 28]	[(1, 2), 29]	[(1, 2), 30]	[(1, 2), 31]	[(1, 2), 32]	[(1, 2), 33]	[(1, 2), 34]	[(1, 2), 35]	[(1, 2), 36]	[(1, 2), 37]	[(1, 2), 38]	[(1, 2), 39]	[(1, 2), 40]	[(1, 2), 41]	[(1, 2), 42]	[(1, 2), 43]	
 ---------
 ===After split, the sibling node has===
 [rid(pid, sid), key]
 [(1, 2), 44]	[(1, 2), 45]	[(1, 2), 46]	[(1, 2), 47]	[(1, 2), 48]	[(1, 2), 49]	[(1, 2), 50]	[(1, 2), 51]	[(1, 2), 52]	[(1, 2), 53]	[(1, 2), 54]	[(1, 2), 55]	[(1, 2), 56]	[(1, 2), 57]	[(1, 2), 58]	[(1, 2), 59]	[(1, 2), 60]	[(1, 2), 61]	[(1, 2), 62]	[(1, 2), 63]	[(1, 2), 64]	[(1, 2), 65]	[(1, 2), 66]	[(1, 2), 67]	[(1, 2), 68]	[(1, 2), 69]	[(1, 2), 70]	[(1, 2), 71]	[(1, 2), 72]	[(1, 2), 73]	[(1, 2), 74]	[(1, 2), 75]	[(1, 2), 76]	[(1, 2), 77]	[(1, 2), 78]	[(1, 2), 79]	[(1, 2), 80]	[(1, 2), 81]	[(1, 2), 82]	[(1, 2), 83]	[(1, 2), 84]	[(1, 2), 85]	[(1, 2), 86]	
 ---------
-*Sibling Key = 0
-===set next node ptr to 888===
-Full node's next node ptr is: 888
-
-***
-===Zengwen: My test and debug is up this point===
-***
-
-Testing non leaf node:
-0
--------------
-initialized:
-<key, pid>
-BTLeafNode::readEntry -- pid = 1
-BTLeafNode::readEntry -- key = 4
-[4, 1]	
----------
-<key, pid>
-BTLeafNode::readEntry -- pid = 7
-BTLeafNode::readEntry -- key = 7
-[7, 7]	BTLeafNode::readEntry -- pid = 5
-BTLeafNode::readEntry -- key = 5
-[5, 5]	BTLeafNode::readEntry -- pid = 2
-BTLeafNode::readEntry -- key = 2
-[2, 2]	BTLeafNode::readEntry -- pid = 1
-BTLeafNode::readEntry -- key = 4
-[4, 1]	
----------
-4
-----------------
-pid_loc: 7
-<key, pid>
-BTLeafNode::readEntry -- pid = 3
-BTLeafNode::readEntry -- key = 3
-[3, 3]	BTLeafNode::readEntry -- pid = 7
-BTLeafNode::readEntry -- key = 7
-[7, 7]	BTLeafNode::readEntry -- pid = 5
-BTLeafNode::readEntry -- key = 5
-[5, 5]	BTLeafNode::readEntry -- pid = 2
-BTLeafNode::readEntry -- key = 2
-[2, 2]	BTLeafNode::readEntry -- pid = 1
-BTLeafNode::readEntry -- key = 4
-[4, 1]	
----------
-<key, pid>
-
----------
-0
+*Sibling Key = 44

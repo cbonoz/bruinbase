@@ -36,8 +36,8 @@
 #define PID_SIZE 4
 #define P_SIZE 1024
 
-#define N_NL 86
-#define N_L 129
+#define N_L 86
+#define N_NL 129
 
 #define L_OFFSET 12
 #define NL_OFFSET 8
@@ -292,15 +292,16 @@ class BTNonLeafNode {
     }
 
 
-    void printKeys() {
-        char *kstart = buffer+PID_SIZE;
-        int kc=getKeyCount();
-        printf("Printing keys for NoNLeaf Node\n");
-        for (int i =0; i < kc;i++) {
-            printf("%d ", *((int *) kstart));
-            kstart+=NL_OFFSET;
-        }
-    }
+    void printKeys();
+    // {
+    //     char *kstart = buffer+PID_SIZE;
+    //     int kc=getKeyCount();
+    //     printf("Printing keys for NoNLeaf Node\n");
+    //     for (int i =0; i < kc;i++) {
+    //         printf("%d ", *((int *) kstart));
+    //         kstart+=NL_OFFSET;
+    //     }
+    // }
 
     void initBuffer(char *b, size_t n) {
         // memset(buffer,NONE,P_SIZE);

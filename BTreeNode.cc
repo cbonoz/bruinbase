@@ -24,7 +24,7 @@ void BTLeafNode::printKeys()
 	// 	printf("The offset of leaf node L_OFFSET is %d\n", L_OFFSET );
 	// 	printf("The offset of non-leaf node NL_OFFSET is %d\n", NL_OFFSET );
 
-// 	The recordID size RID_SIZE is 8
+// The recordID size RID_SIZE is 8
 // The pageID size PID_SIZE is 4
 // The key size K_SIZE is 4
 // The page size P_SIZE is 1024
@@ -142,10 +142,10 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid,
                               BTLeafNode& sibling, int& siblingKey)
 {
 	//number of keys
-	// int N = N_L-1;
-	int N = 85;
+	int N = N_L -1;//N = 85;
 	//mid_key is the position to split
 	int mid_key = N/2;
+	printf("BTLeafNode::insertAndSplit - mid_key is %d\n", mid_key);
 
 	int pos;
 	BTLeafNode::locate(key, pos);
@@ -154,8 +154,12 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid,
 	
 	int num_copy = N-mid_key;
 
+	printf("BTLeafNode::insertAndSplit - we should copy %d keys\n", num_copy);
+
 	if (pos>mid_key) {
 		num_copy--;
+	printf("BTLeafNode::insertAndSplit - wait, copy 1 less key\n");
+
 	}
 
 
@@ -171,8 +175,12 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid,
 		sibling.insert(key,rid);
 	} else {
 		//insert in current node
+	printf("BTLeafNode::insertAndSplit - insert in current node\n");
 		insert(key, rid);
 	}
+
+	RecordId siblingRid;
+	sibling.readEntry(0, siblingKey, siblingRid);
 
 	return 0;
 }
@@ -195,6 +203,8 @@ RC BTLeafNode::locate(int searchKey, int& eid)
 
 	int curKey;
 	int i=0;
+
+		printf("BTLeafNode::locate - keyCount = %d\n", getKeyCount());
 	for (int iter = 0; iter < getKeyCount(); iter++) {
 	// wrong b/c it can go over the whole node if the node is empty
 	// while(kstart < end) {
@@ -209,7 +219,7 @@ RC BTLeafNode::locate(int searchKey, int& eid)
 		}
 		
 		if (curKey > searchKey) {
-			eid=max(0,i-1);
+			eid=i; //the index entry immediately after the largest index key that is smaller than searchKey,
 
 		printf("NO Match... eid = %d\n", eid);
 			return RC_NO_SUCH_RECORD;
@@ -220,7 +230,7 @@ RC BTLeafNode::locate(int searchKey, int& eid)
 	}
 	// TODO it can has problem!!
 		eid=i;// we've forgot this
-		printf("NO Match... eid = %d\n", eid);
+		// printf("NO Match... eid = %d\n", eid);
 	return EC;
 }
 
@@ -280,6 +290,25 @@ BTNonLeafNode::BTNonLeafNode()
 	memset(buffer, NONE, PageFile::PAGE_SIZE);
 }
 
+	void BTNonLeafNode::printKeys() {
+        // char *kstart = buffer+PID_SIZE;
+        // int kc=getKeyCount();
+        // printf("Printing keys for NoNLeaf Node\n");
+        // for (int i = 0; i < kc+1; i++) {
+        //     printf("%d ", *((int *) kstart));
+        //     kstart+=NL_OFFSET;
+        // }
+		int key;
+		PageId pid;
+		for(int i=0; i<getKeyCount()+1; i++) {
+			readEntry(i, key, pid);
+			if (pid != NONE) {
+				printf("[%d, %d]\t", pid, key);
+			}
+		}
+		printf("\n");
+    }
+
 /*
  * Read the content of the node from the page pid in the PageFile pf.
  * @param pid[IN] the PageId to read
@@ -336,25 +365,31 @@ int BTNonLeafNode::getKeyCount()
 RC BTNonLeafNode::insert(int key, PageId pid)
 {
 	int pos;
-	/*
-	int kc=getKeyCount();
-	if (kc==N_NL-1) {
-		return insertAndSplit(key,pid);
-	} else if (kc>=N_NL || kc<0) {
-		return EC;
-	}
-	*/
-
 	//find key location
 	locate(key,pos);
+	printf("located key pos = %d\n", pos);
 	//find copy location
-	char *loc = buffer+pos*NL_OFFSET;
+	// char *loc = buffer+pos*NL_OFFSET;
+	char *loc = buffer+pos*8;
 	//shift pairs from pos one space to the right
 	shiftKeysRight(pos);
 	//copy in inserted pair
+	printf("copy <pid = %d> in inserted pair\n", pid);
 	memcpy(loc, &pid, PID_SIZE);
+	printf("copy <key = %d> in inserted pair\n", key);
 	memcpy(loc+PID_SIZE, &key, K_SIZE);
 	
+
+	// //find copy location
+	// char *loc;
+	// loc = buffer;
+	// int offset = pos*12; 
+	// loc += offset;
+
+	// //shift pairs from pos one space to the right
+	// BTLeafNode::shiftKeysRight(pos);
+
+
 	return 0;
 }
 
@@ -371,7 +406,7 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, int& midKey)
 {
 	//number of keys
-	int N = N_NL-1;
+	int N = N_L-1;
 	//mid_key is the position to split
 	int mid_key = N/2;
 
@@ -387,9 +422,12 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
 		num_copy--;
 	}
 
-	char *sib_start = buffer+P_SIZE-(num_copy*NL_OFFSET);
+	// char *sib_start = buffer+P_SIZE-(num_copy*NL_OFFSET);
+	char *sib_start = buffer+P_SIZE-(num_copy*8);
 
-	sibling.initBuffer(sib_start,num_copy*NL_OFFSET);
+	sibling.initBuffer(sib_start,num_copy*8);
+
+	memset(sib_start, NONE, num_copy*8);
 
 	if (pos>mid_key) {
 		//insert in sibling
@@ -399,6 +437,8 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
 		insert(key, pid);
 	}
 	
+	PageId siblingPid;
+	sibling.readEntry(0, midKey, siblingPid);
 	return 0;
 }
 
@@ -427,8 +467,6 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid)
 
 	pid=*((int *) (kstart-PID_SIZE));
 	return 0;
-
-	
 }
 
 /**
@@ -446,26 +484,30 @@ RC BTNonLeafNode::locate(int searchKey, int &eid) {
 	char *kstart=buffer+PID_SIZE;
 	char *end = buffer+P_SIZE;
 
-
 	int curKey;
 	int i=0;
-	while(kstart < end) {
+	printf("BTNonLeafNode::locate - keyCount = %d\n", getKeyCount());
+	for(int iter = 0; iter < getKeyCount(); iter++) {
 		curKey=*((int *) kstart);
+		// printf("BTLeafNode::locate - currentKey = %d\n", curKey);
 
 		if (curKey==searchKey) {
 			eid=i;
+			printf("Match! eid = %d\n", eid);
 			return 0;
 		}
 		
 		if (curKey > searchKey) {
-			eid=i-1;
+			eid=i; //the index entry immediately after the largest index key that is smaller than searchKey,
+			printf("NO Match... eid = %d\n", eid);
 			return RC_NO_SUCH_RECORD;
 		}
 
 		kstart+=NL_OFFSET;
 		i++;
 	}
-
+	eid=i;// we've forgot this
+	// printf("NO Match... eid = %d\n", eid);
 	return EC;
 }
 
@@ -478,7 +520,9 @@ RC BTNonLeafNode::locate(int searchKey, int &eid) {
  */
 RC BTNonLeafNode::readEntry(int eid, int& key, PageId& pid)
 {
-	char *entryStart=buffer+NL_OFFSET*eid;
+	char *entryStart;
+	entryStart = buffer + (eid * 8);
+	// char *entryStart=buffer+NL_OFFSET*eid;
 
 	memcpy(&pid, entryStart, PID_SIZE);
 	// printf("BTNonLeafNode::readEntry -- pid = %d\n", pid);
