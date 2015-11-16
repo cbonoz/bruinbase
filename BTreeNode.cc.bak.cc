@@ -15,7 +15,7 @@ BTLeafNode::BTLeafNode()
 
 void BTLeafNode::printKeys()
 {
-	// printf("The # of keys in a leaf node is %lu\n", N_L);
+	// printf("The # of keys in a leaf node is %lu\n", N_PTR);
 	// printf("The # of keys in a non-leaf node is %lu\n", N_NL);
 	// 	printf("The recordID size RID_SIZE is %d\n", RID_SIZE);
 	// 	printf("The pageID size PID_SIZE is %d\n", PID_SIZE);
@@ -142,7 +142,9 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid,
                               BTLeafNode& sibling, int& siblingKey)
 {
 	//number of keys
-	int N = N_L -1;//N = 85;
+	int N = N_PTR
+                    '
+                    ' -1;//N = 85;
 	//mid_key is the position to split
 	int mid_key = N/2;
 	printf("BTLeafNode::insertAndSplit - mid_key is %d\n", mid_key);
@@ -338,12 +340,10 @@ RC BTNonLeafNode::write(PageId pid, PageFile& pf)
  */
 int BTNonLeafNode::getKeyCount()
 {
-	char *kstart=buffer;
-	// char *end = buffer+P_SIZE-PID_SIZE;
-char *end = buffer+85*8;
-	// int curKey;
+	char *kstart = buffer;
+	char *end = buffer + N_KEY * NL_OFFSET;
 	int curPid;
-	int i=0;
+	int i = 0;
 	while(kstart <= end) {
 		// curKey=*((int *) kstart);
 		curPid=*((int *) kstart);
@@ -405,7 +405,9 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, int& midKey)
 {
 	//number of keys
-	int N = N_L-1;
+	int N = N_PTR
+                    '
+                    '-1;
 	//mid_key is the position to split
 	int mid_key = N/2;
 

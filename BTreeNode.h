@@ -5,6 +5,10 @@
  *
  * @author Junghoo "John" Cho <cho AT cs.ucla.edu>
  * @date 5/28/2008
+ *
+ * @author Zengwen Yuan
+ * @author Chris Buonocore
+ * @date 11/15/2015
  */
 
 #ifndef BTREENODE_H
@@ -16,35 +20,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NONE -1
-
 // #define RID_SIZE sizeof(RecordId)
 // #define K_SIZE sizeof(int)
 // #define V_SIZE sizeof(int)
 // #define PID_SIZE sizeof(PageId)
 // #define P_SIZE PageFile::PAGE_SIZE
-
 // #define N_NL (int) P_SIZE / (K_SIZE + PID_SIZE) + 1
-// #define N_L (int) (P_SIZE - PID_SIZE) / (RID_SIZE+K_SIZE) + 1
-
+// #define N_PTR (int) (P_SIZE - PID_SIZE) / (RID_SIZE+K_SIZE) + 1
 // #define L_OFFSET RID_SIZE+K_SIZE
 // #define NL_OFFSET PID_SIZE+K_SIZE
 
-#define RID_SIZE 8
-#define K_SIZE 4
-#define V_SIZE 4
-#define PID_SIZE 4
-#define P_SIZE 1024
+#define P_SIZE 1024 // Page size
 
-#define N_L 86
-#define N_NL 129
+#define RID_SIZE 8  // RecordId size
+#define PID_SIZE 4  // PageId size
+#define K_SIZE 4    // Key size
 
-#define L_OFFSET 12
-#define NL_OFFSET 8
+#define L_OFFSET 12 // Leaf node offset
+#define NL_OFFSET 8 // Non-leaf node offset
 
+#define N_PTR 86  // Max. number of pointers for leaf nodes
+#define N_KEY 85    // Max. number of keys for leaf nodes
 
-#define EC -100 //ERROR CODE
-
+#define NONE -1     // INIT VALUE FOR ALL THE NODES
+#define EC -100     // ERROR CODE
 
 /**
  * BTLeafNode: The class representing a B+tree leaf node.
@@ -52,6 +51,9 @@
 class BTLeafNode {
   public:
 
+   /**
+    * Constructor
+    */
     BTLeafNode();
 
    /**
@@ -134,41 +136,41 @@ class BTLeafNode {
     */
     RC write(PageId pid, PageFile& pf);
 
+   /**
+    * Helper function
+    * Shift all the keys right to the desired position pos
+    * @param pos[IN] the position of the starting point
+    */
     void shiftKeysRight(int pos) {
         //shift element right by one
-        char *loc = buffer+pos*L_OFFSET;
-        // char *loc = buffer+pos*12;
+        char *loc = buffer + pos * L_OFFSET;
 
-        char* temp = (char*)malloc(P_SIZE);
+        char* temp = (char*) malloc(P_SIZE);
         memset(temp, NONE, P_SIZE);
 
-        memcpy(temp,loc,(getKeyCount()-pos)*L_OFFSET);
+        memcpy(temp, loc, (getKeyCount() - pos) * L_OFFSET);
         loc += L_OFFSET;
-        memcpy(loc, temp, (getKeyCount()-pos)*L_OFFSET);
-        // memcpy(temp,loc,(getKeyCount()-pos)*12);
-        // loc += 12;
-        // memcpy(loc, temp, (getKeyCount()-pos)*12);
+        memcpy(loc, temp, (getKeyCount() - pos) * L_OFFSET);
+
         free(temp);
-        // memcpy(loc+L_OFFSET,loc,(getKeyCount()-pos)*L_OFFSET);
     }
 
+    /**
+    * Helper function
+    * Prints out the keys to the screen
+    */
     void printKeys();
-    //  {
-    //     char *kstart = buffer+RID_SIZE;
-    //     int kc=getKeyCount();
-    //     printf("Printing keys for Leaf Node\n");
-    //     for (int i =0; i < kc;i++) {
-    //         printf("%d ", *((int *) kstart));
-    //         kstart+=L_OFFSET;
-    //     }
-    // }
 
-    void initBuffer(char *b, size_t n) {
-        memset(buffer,NONE,P_SIZE);
-        memcpy(buffer,b,n);
+    /**
+    * Helper function
+    * Initialize the buffer by copying the contents in buf to buffer
+    * @param buf[IN] the pointer to the buf
+    * @param size[IN] the number of bytes to copy
+    */
+    void initBuffer(char *buf, size_t size) {
+        memset(buffer, NONE, P_SIZE);
+        memcpy(buffer, buf, size);
     }
-
-   
 
   private:
    /**
@@ -184,7 +186,9 @@ class BTLeafNode {
  */
 class BTNonLeafNode {
   public:
-
+    /**
+    * Constructor
+    */
     BTNonLeafNode();
 
    /**
@@ -273,40 +277,43 @@ class BTNonLeafNode {
      */
     RC readEntry(int eid, int& key, PageId& pid);
 
+   /**
+    * Helper function
+    * Shift all the keys right to the desired position pos
+    * @param pos[IN] the position of the starting point
+    */
     void shiftKeysRight(int pos) {
         //shift element right by one
-        // char *loc = buffer+pos*NL_OFFSET;
-        char *loc = buffer+pos*8;
+        char *loc = buffer + pos * NL_OFFSET;
+        // char *loc = buffer+pos*8;
 
-        char* temp = (char*)malloc(P_SIZE);
+        char* temp = (char*) malloc(P_SIZE);
         memset(temp, NONE, P_SIZE);
 
-        // memcpy(temp,loc,(getKeyCount()-pos)*NL_OFFSET);
-        // loc += NL_OFFSET;
-        // memcpy(loc, temp, (getKeyCount()-pos)*NL_OFFSET);
-        memcpy(temp,loc,(getKeyCount()+1-pos)*8);
-        loc += 8;
-        memcpy(loc, temp, (getKeyCount()+1-pos)*8);
+        memcpy(temp, loc, (getKeyCount() + 1 - pos) * NL_OFFSET);
+        loc += NL_OFFSET;
+        memcpy(loc, temp, (getKeyCount() + 1 - pos) * NL_OFFSET);
+        // memcpy(temp,loc,(getKeyCount()+1-pos)*8);
+        // loc += 8;
+        // memcpy(loc, temp, (getKeyCount()+1-pos)*8);
         free(temp);
-        // memcpy(loc+NL_OFFSET,loc,(getKeyCount()-pos)*NL_OFFSET);
     }
 
-
+    /**
+    * Helper function
+    * Prints out the keys to the screen
+    */
     void printKeys();
-    // {
-    //     char *kstart = buffer+PID_SIZE;
-    //     int kc=getKeyCount();
-    //     printf("Printing keys for NoNLeaf Node\n");
-    //     for (int i =0; i < kc;i++) {
-    //         printf("%d ", *((int *) kstart));
-    //         kstart+=NL_OFFSET;
-    //     }
-    // }
 
-    void initBuffer(char *b, size_t n) {
-        memset(buffer,NONE,P_SIZE);
-        // memset(buffer,0,P_SIZE);
-        memcpy(buffer,b,n);
+    /**
+    * Helper function
+    * Initialize the buffer by copying the contents in buf to buffer
+    * @param buf[IN] the pointer to the buf
+    * @param size[IN] the number of bytes to copy
+    */
+    void initBuffer(char *buf, size_t size) {
+        memset(buffer, NONE, P_SIZE);
+        memcpy(buffer, buf, size);
     }
 
   private:
