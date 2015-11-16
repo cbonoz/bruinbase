@@ -11,7 +11,6 @@
 #include "SqlEngine.h"
 #include <cstdio>
 
-
 int main()
 {
   // run the SQL engine taking user commands from standard input (console).
@@ -19,4 +18,3 @@ int main()
 
   return 0;
 }
-
