@@ -215,9 +215,11 @@ RC BTLeafNode::locate(int searchKey, int& eid)
  */
 RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid)
 {
-	char *entryStart;
-	entryStart = buffer + (eid * L_OFFSET);
+	char *entryStart=buffer + (eid * L_OFFSET);
+	char *end=buffer+P_SIZE;
 
+	if (buffer>end)
+		return RC_INVALID_CURSOR;
 	memcpy(&rid, entryStart, RID_SIZE);
 	entryStart += RID_SIZE;
 	memcpy(&key, entryStart, K_SIZE);

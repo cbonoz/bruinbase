@@ -322,6 +322,9 @@ class BTNonLeafNode {
     * that contains the node.
     */
     char buffer[PageFile::PAGE_SIZE];
+    // char *bufferStart;
+    
+    
 }; 
 
 #endif /* BTREENODE_H */

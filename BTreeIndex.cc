@@ -9,7 +9,6 @@
  
 #include "BTreeIndex.h"
 #include "BTreeNode.h"
-#include <assert.h>
 
 using namespace std;
 
@@ -18,10 +17,10 @@ using namespace std;
  */
 BTreeIndex::BTreeIndex()
 {
+    //empty tree index contructor
     rootPid = -1;
     treeHeight = 0;
 
-     //zero out the buffer
 }
 
 /*
@@ -33,7 +32,7 @@ BTreeIndex::BTreeIndex()
  */
 RC BTreeIndex::open(const string& indexname, char mode)
 {
-	RC ret;
+	RC ret=0;
 	ret = pf.open(indexname,mode);
 	if (ret)
 		return RC_FILE_OPEN_FAILED;
@@ -86,7 +85,7 @@ RC BTreeIndex::open(const string& indexname, char mode)
  */
 RC BTreeIndex::close()
 {
-    RC ret;
+    RC ret=0;
     //smallest unit of read or write in pagefile is 1 page (need to allocate 
     //the space of one page)
     char *buffer = (char *) malloc(P_SIZE * sizeof(char));
@@ -119,15 +118,141 @@ RC BTreeIndex::close()
     return ret;
 }
 
+RC BTreeIndex::insertInParent(int mid_key, vector<PageId> &pids) {
+    RC ret=0;
+
+    PageId siblingPid = pids.back(); 
+    pids.pop_back();
+
+    PageId lnodePid= pids.back(); 
+    pids.pop_back();
+
+    PageId parentPid= pids.back(); 
+    pids.pop_back();
+
+
+    if (parentPid == rootPid) {
+        BTNonLeafNode root;
+        root.initializeRoot(lnodePid, mid_key, siblingPid);
+        PageId newRootPid = pf.endPid();
+
+        root.write(newRootPid, pf);
+
+        if (ret)
+            return RC_FILE_WRITE_FAILED;
+
+        rootPid = newRootPid;
+        treeHeight++;
+        return ret;
+    }
+
+    BTNonLeafNode parent;
+    ret=parent.read(parentPid, pf);
+    if (ret)
+        return RC_FILE_READ_FAILED;
+
+    int kc=parent.getKeyCount();
+
+    if (kc<N_KEY) {
+        //if there is space in the parent node
+        parent.insert(mid_key, siblingPid);
+    } else {
+        //no space in the parent node - split
+        PageId newSiblingPid=pf.endPid();
+        BTNonLeafNode newSibling;
+        int new_mid_key;
+
+
+        //push l_node pid
+        pids.push_back(parentPid);
+        //push sibling node pid
+        pids.push_back(newSiblingPid);
+
+        //no space in the parent node
+        parent.insertAndSplit(mid_key, parentPid, newSibling, new_mid_key);
+        ret=newSibling.write(newSiblingPid, pf);
+        if (ret)
+            return RC_FILE_WRITE_FAILED;
+
+
+        ret = insertInParent(new_mid_key, pids);
+
+    }
+
+
+    return ret;
+}
 /*
  * Insert (key, RecordId) pair to the index.
  * @param key[IN] the key for the value inserted into the index
  * @param rid[IN] the RecordId for the record being inserted into the index
  * @return error code. 0 if no error
  */
+
+ //following the book algorithm
 RC BTreeIndex::insert(int key, const RecordId& rid)
 {
-    RC ret;
+    RC ret=0;
+    vector<int> pids;
+
+
+    //tree is empty- - initialize it
+    if (treeHeight==0) {
+        BTLeafNode root;
+        ret=root.insert(key ,rid);
+
+        rootPid = pf.endPid();
+        //make sure minimal rootPid value is 1 since tree now initialized
+        rootPid=rootPid > 0 ? rootPid : 1;
+
+        ret=root.write(rootPid,pf);
+        if (ret) 
+            return RC_FILE_WRITE_FAILED;
+
+        return ret;
+    }
+
+    
+
+    IndexCursor targetIdx;
+    locate(key,targetIdx,1);
+
+    PageId targetPid = targetIdx.pid;
+    BTLeafNode l_node;
+    l_node.read(targetPid, pf);
+
+    int kc=l_node.getKeyCount();
+
+    if (kc<N_KEY) {
+        //l_node is not full - insert
+        l_node.insert(key, rid);
+    } else {
+        //no space in the parent node - split
+
+        //check if leadnode is full of keys
+        PageId siblingPid = pf.endPid();
+        BTLeafNode sibling;
+        int mid_key;
+    
+        //push l_node pid
+        pids.push_back(targetPid);
+        //push sibling node pid
+        pids.push_back(siblingPid);
+
+        //l_node is full - insert and split
+        l_node.insertAndSplit(key, rid, sibling, mid_key);
+        ret=sibling.write(siblingPid, pf);
+        if (ret)
+            return RC_FILE_WRITE_FAILED;
+
+        sibling.setNextNodePtr(l_node.getNextNodePtr());
+
+        ret = insertInParent(mid_key, pids);
+    }
+
+
+
+    
 
 
 
@@ -153,9 +278,11 @@ RC BTreeIndex::insert(int key, const RecordId& rid)
  *                    smaller than searchKey.
  * @return 0 if searchKey is found. Othewise an error code
  */
-RC BTreeIndex::locate(int searchKey, IndexCursor& cursor)
+RC BTreeIndex::locate(int searchKey, IndexCursor& cursor, int isTracking=0)
 {
-    RC ret;
+    RC ret=0;
+    //clear the existing pids chain
+    pids.erase(pids.begin(),pids.end());
     //we read the node at the page id 'pid' in the pagefile into a leaf or nonleaf node
 
     int current_level=0;
@@ -173,6 +300,10 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor)
 	    if (ret)
 	    	return RC_FILE_READ_FAILED;
 
+
+
+        if (isTracking)
+            pids.push_back(curPid);
     	ret=nl_node.locateChildPtr(searchKey, curPid);
 	    if (ret)
 	    	return RC_NO_SUCH_RECORD;
@@ -183,6 +314,7 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor)
     ret=l_node.read(curPid,pf);
     if (ret)
     	return RC_FILE_READ_FAILED;
+
 
     cursor.pid=curPid;
     ret=l_node.locate(searchKey, cursor.eid);
@@ -202,7 +334,7 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor)
  */
 RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid)
 {
-    RC ret;
+    RC ret=0;
 
     PageId c_pid = cursor.pid;
     int c_eid = cursor.eid;
@@ -214,16 +346,18 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid)
 
 	ret=l_node.readEntry(c_eid, key, rid);
 	if (ret)
-		return RC_NO_SUCH_RECORD;
+		return RC_INVALID_CURSOR;
 
+    int kc = l_node.getKeyCount();
 
-	//TODO: increment cursor and check if at end of leaf node
+    if (c_eid==kc) {
+        cursor.eid=0;
+        cursor.pid=l_node.getNextNodePtr();
 
-
-
-
-
-
+    } else {
+        cursor.eid=c_eid+1;
+        cursor.pid=c_pid;
+    }
 
     return ret;
 }
