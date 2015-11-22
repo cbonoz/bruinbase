@@ -64,8 +64,12 @@ class BTreeIndex {
    */
   RC insert(int key, const RecordId& rid);
 
-  //insertHelper used for recursive calls if nested overflows upon inserting the new key, rid pair
-  RC insertInParent(int mid_key, vector<PageId> &pids);
+  /**
+   * insertHelper used for recursive calls
+   * if nested overflows upon inserting the new <key, rid> pair
+   */
+  RC insertInParent(vector<PageId> &path, int siblingKey);
+
   /**
    * Run the standard B+Tree key search algorithm and identify the
    * leaf node where searchKey may exist. If an index entry with
@@ -82,9 +86,11 @@ class BTreeIndex {
    * @param cursor[OUT] the cursor pointing to the index entry with 
    *                    searchKey or immediately behind the largest key 
    *                    smaller than searchKey.
+   * @param isTracking[IN] store the path of PageIds
    * @return 0 if searchKey is found. Othewise, an error code
    */
-  RC locate(int searchKey, IndexCursor& cursor, int isTracking);
+  RC locate(int searchKey, IndexCursor& cursor, bool isTracking);
+
   /**
    * Read the (key, rid) pair at the location specified by the index cursor,
    * and move foward the cursor to the next entry.
@@ -97,7 +103,7 @@ class BTreeIndex {
   
  private:
   PageFile pf;         /// the PageFile used to store the actual b+tree in disk
-  vector<PageId> pids;
+  vector<PageId> path; /// the vector to store the path (pids) to the leaf node
 
   PageId   rootPid;    /// the PageId of the root node
   int      treeHeight; /// the height of the tree

@@ -38,6 +38,8 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
 {
   RecordFile rf;   // RecordFile containing the table
   RecordId   rid;  // record cursor for table scanning
+  BTreeIndex index; // BTree index
+  IndexCursor cursor; // index cursor for locating tuples
 
   RC     rc;
   int    key;     
@@ -50,10 +52,13 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
     fprintf(stderr, "Error: table %s does not exist\n", table.c_str());
     return rc;
   }
+  // TODO : Finish index search
+  int searchkey = 0;
 
   // scan the table file from the beginning
   rid.pid = rid.sid = 0;
   count = 0;
+
   while (rid < rf.endRid()) {
     // read the tuple
     if ((rc = rf.read(rid, key, value)) < 0) {
@@ -66,33 +71,33 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
       // compute the difference between the tuple value and the condition value
       switch (cond[i].attr) {
       case 1:
-	diff = key - atoi(cond[i].value);
-	break;
+        diff = key - atoi(cond[i].value);
+        break;
       case 2:
-	diff = strcmp(value.c_str(), cond[i].value);
-	break;
+        diff = strcmp(value.c_str(), cond[i].value);
+        break;
       }
 
       // skip the tuple if any condition is not met
       switch (cond[i].comp) {
       case SelCond::EQ:
-	if (diff != 0) goto next_tuple;
-	break;
+        if (diff != 0) goto next_tuple;
+        break;
       case SelCond::NE:
-	if (diff == 0) goto next_tuple;
-	break;
+        if (diff == 0) goto next_tuple;
+        break;
       case SelCond::GT:
-	if (diff <= 0) goto next_tuple;
-	break;
+        if (diff <= 0) goto next_tuple;
+        break;
       case SelCond::LT:
-	if (diff >= 0) goto next_tuple;
-	break;
+        if (diff >= 0) goto next_tuple;
+        break;
       case SelCond::GE:
-	if (diff < 0) goto next_tuple;
-	break;
+        if (diff < 0) goto next_tuple;
+        break;
       case SelCond::LE:
-	if (diff > 0) goto next_tuple;
-	break;
+        if (diff > 0) goto next_tuple;
+        break;
       }
     }
 
@@ -102,15 +107,15 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
 
     // print the tuple 
     switch (attr) {
-    case 1:  // SELECT key
-      fprintf(stdout, "%d\n", key);
-      break;
-    case 2:  // SELECT value
-      fprintf(stdout, "%s\n", value.c_str());
-      break;
-    case 3:  // SELECT *
-      fprintf(stdout, "%d '%s'\n", key, value.c_str());
-      break;
+      case 1:  // SELECT key
+        fprintf(stdout, "%d\n", key);
+        break;
+      case 2:  // SELECT value
+        fprintf(stdout, "%s\n", value.c_str());
+        break;
+      case 3:  // SELECT *
+        fprintf(stdout, "%d '%s'\n", key, value.c_str());
+        break;
     }
 
     // move to the next tuple
@@ -130,23 +135,23 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
   return rc;
 }
 
-
-/*
-
-
-
-
-
-*/
+/**
+ * load a table from a load file.
+ * @param table[IN] the table name in the LOAD command
+ * @param loadfile[IN] the file name of the load file
+ * @param index[IN] true if "WITH INDEX" option was specified
+ * @return error code. 0 if no error
+ */
 RC SqlEngine::load(const string& table, const string& loadfile, bool index)
 {
   RecordFile wf; // RecordFile to store the table
   // The ifstream constructor expects a const char*, so we need to do ifstream file(filename.c_str()); to make it work.
   ifstream rf(loadfile.c_str()); // RecordFile for the load file
-  RecordId   rid;  // record cursor for table scanning
-  ifstream idxf;
+  RecordId rid;  // record cursor for table scanning
+  // ifstream idxf;
+  BTreeIndex btree; // B+ tree for index
 
-  RC rc;
+  RC rc = 0;
 
   string line;
   string value;
@@ -158,44 +163,73 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
   // open the table file
   if ((rc = wf.open(table + ".tbl", 'w') < 0)) {
     fprintf(stderr, "Error: table %s file could not be opened for writing\n", table.c_str());
+    wf.close();
     return rc;
   }
 
-  if (! rf.is_open()) {
+  if (!rf.is_open()) {
     fprintf(stderr, "Error: record %s file could not be opening for reading\n", loadfile.c_str());
-    return rc;
+    wf.close();
+    rf.close();
+    return RC_FILE_OPEN_FAILED;
   }
 
   if (index) {
-    idxf.open((table + ".idx").c_str());
-    if (! idxf.is_open()) {
-      fprintf(stderr, "Error: Idx %s file could not be opened for writing\n", loadfile.c_str());
-      return rc;
+    // idxf.open((table + ".idx").c_str());
+    // if (!idxf.is_open()) {
+    //   fprintf(stderr, "Error: index %s file could not be opened for writing\n", loadfile.c_str());
+    //   return RC_FILE_OPEN_FAILED;
+    // }
+    rc = btree.open((table + ".idx").c_str(), 'w');
+    if (rc != 0) {
+      fprintf(stderr, "Error: index %s file could not be opened for writing\n", loadfile.c_str());
+      wf.close();
+      rf.close();
+      return rc; //RC_FILE_OPEN_FAILED;
     }
   }
 
   // initialize the record ID
   rid.pid = rid.sid = 0;
 
-  while (!rf.eof())
-  {
-    getline(rf,line);
+  while (!rf.eof()) {
+    getline(rf, line);
     if (!line.empty()) {
-      parseLoadLine(line, key, value);
-      wf.append(key, value, rid);
+      rc = parseLoadLine(line, key, value);
+      if (rc != 0) {
+        fprintf(stderr, "Error: cannot parse load line\n");
+        wf.close();
+        rf.close();
+        return rc;
+      } else { // parseLoadLine failed
+        rc = wf.append(key, value, rid);
+        if (rc != 0) { // append line failed
+          fprintf(stderr, "Error: cannot append value to record file\n");
+          wf.close();
+          rf.close();
+          return rc;
+        }
+
+        // insert corresponding (key, RecordId) to 
+        // idxf for each tuple of the inserted file
+        if (index) { // inserting key into index
+          rc = btree.insert(key, rid);
+          if (rc != 0) { // insert into index failed
+            fprintf(stderr, "Error: cannot insert key into index %s file\n", loadfile.c_str());
+            wf.close();
+            rf.close();
+            return rc;
+          }
+        }
+      }
     }
-
-    //write to the table file
-      
-    //count++;
-
-    //TODO add corresponding (key, RecordId) to 
-    //idxf for each tuple of the inserted file
   }
 
   wf.close();
-  rf.close();    
-  // idxf.close(); // do not forgot to close the index file if we opened it
+  rf.close();
+  if (index) {
+    btree.close();
+  }
 
   return 0;
 }
