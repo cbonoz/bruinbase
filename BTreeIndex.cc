@@ -36,12 +36,13 @@ RC BTreeIndex::open(const string& indexname, char mode)
     RC ret = 0;
     ret = pf.open(indexname, mode);
     if (ret != 0) {
-        return ret; //RC_FILE_OPEN_FAILED;
+        return ret; // RC_FILE_OPEN_FAILED;
     } else {
         char *buffer = (char *) malloc(P_SIZE * sizeof(char));
         memset(buffer, 0, P_SIZE);
 
         PageId indexEndPid = pf.endPid();
+        printf("BTreeIndex::open - endPid for pf is %d\n", indexEndPid);
         if (indexEndPid == 0) { // pagefile is empty, set members to empty (initial) values
             rootPid = -1;
             treeHeight = 0;
@@ -51,8 +52,8 @@ RC BTreeIndex::open(const string& indexname, char mode)
                 return ret; // RC_FILE_WRITE_FAILED;
             }
         } else { // page file is not empty, we read first page of the index file
-            // ret = pf.read(indexEndPid - 1, buffer); // should read the first page
-            ret = pf.read(0, buffer);   // read the first page to get rootPid and treeHeight
+            ret = pf.read(indexEndPid - 1, buffer); // should read the first page
+            // ret = pf.read(0, buffer);   // read the first page to get rootPid and treeHeight
             if (ret != 0) {
                 free(buffer);
                 return ret; // RC_FILE_READ_FAILED;
@@ -260,7 +261,7 @@ RC BTreeIndex::insert(int key, const RecordId& rid) // following the book algori
  *                    smaller than searchKey.
  * @return 0 if searchKey is found. Othewise an error code
  */
-RC BTreeIndex::locate(int searchKey, IndexCursor& cursor, bool isTracking = false)
+RC BTreeIndex::locate(int searchKey, IndexCursor& cursor, bool isTracking)
 {
     RC ret = 0;
     // clear the existing path chain
@@ -269,7 +270,8 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor, bool isTracking = fals
 
     int currentLevel = 0;
     assert(treeHeight >= 0);
-    assert(rootPid < 0);
+    // this one can be wrong if for the second index file, pid > 0!!
+    // assert(rootPid < 0);
     
     // BTNonLeafNode
     // BTLeafNode
@@ -339,4 +341,10 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid)
     }
 
     return ret;
+}
+
+RC BTreeIndex::BTreeInfo() {
+    printf("BTreeIndex::BTreeInfo - rootPid: %d\n", rootPid);
+    printf("BTreeIndex::BTreeInfo - treeHeight: %d\n", treeHeight);
+    return 0;
 }

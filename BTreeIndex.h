@@ -89,7 +89,7 @@ class BTreeIndex {
    * @param isTracking[IN] store the path of PageIds
    * @return 0 if searchKey is found. Othewise, an error code
    */
-  RC locate(int searchKey, IndexCursor& cursor, bool isTracking);
+  RC locate(int searchKey, IndexCursor& cursor, bool isTracking = false);
 
   /**
    * Read the (key, rid) pair at the location specified by the index cursor,
@@ -101,6 +101,8 @@ class BTreeIndex {
    */
   RC readForward(IndexCursor& cursor, int& key, RecordId& rid);
   
+  RC BTreeInfo();
+
  private:
   PageFile pf;         /// the PageFile used to store the actual b+tree in disk
   vector<PageId> path; /// the vector to store the path (pids) to the leaf node
