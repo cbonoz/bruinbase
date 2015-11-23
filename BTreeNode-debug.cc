@@ -310,6 +310,9 @@ RC BTNonLeafNode::write(PageId pid, PageFile& pf)
 int BTNonLeafNode::getKeyCount()
 {
 	char *kstart = buffer;
+	// char *end = buffer+P_SIZE-PID_SIZE;
+	// char *end = buffer + (N_KEY * NL_OFFSET);
+	// ONE
 	char *end = buffer + (N_KEY * NL_OFFSET) + PID_SIZE;
 	int curPid;
 	int i = 0;
@@ -327,6 +330,9 @@ int BTNonLeafNode::getKeyCount()
 		i++;
 	}
 
+	// printf("BTNonLeafNode::getKeyCount() - i = %d\n", i);
+
+	// return i;
 	return (i > N_KEY) ? (i-1) : i;
 }
 
@@ -341,6 +347,8 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 	int pos;
 	// find key location
 	BTNonLeafNode::locate(key, pos);
+	printf("BTNonLeafNode::insert() - located pos = %d\n", pos);
+	printf("BTNonLeafNode::insert() - CHECKPOINT getKeyCount = %d keys\n", getKeyCount());
 	// printf("located key pos = %d\n", pos);
 	// find copy location
 	char *loc = buffer + PID_SIZE + pos * NL_OFFSET;
@@ -354,6 +362,10 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 	loc += K_SIZE;
 	memcpy(loc, &pid, PID_SIZE);
 
+	printf("BTNonLeafNode::insert() - I am printing keys\n");
+	printKeys();
+
+	printf("BTNonLeafNode::insert() - CHECKPOINT getKeyCount = %d keys\n", getKeyCount());
 	return 0;
 }
 
@@ -379,6 +391,38 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
 	sibling.initBuffer(sib_start, ((num_copy * NL_OFFSET) + PID_SIZE));
 	memset(loc, NONE, ((num_copy + 1) * NL_OFFSET));
 
+
+
+	// int pos;
+	// locate(key, pos);
+	// printf("BTNonLeafNode::insertAndSplit() - located pos = %d\n", pos);
+	
+	// // pointer to start of right half
+	// int num_copy = N_KEY - mid_key;
+
+	// if (pos > mid_key) {
+	// 	num_copy--;
+	// }
+
+	// printf("BTNonLeafNode::insertAndSplit() - number of keys to copy = %d\n", num_copy);
+
+	// // TODO: May have bug regarding keep the last pointer pid!!
+	// char *sib_start = buffer + ((N_KEY - num_copy) * NL_OFFSET);
+	// sibling.initBuffer(sib_start, num_copy * NL_OFFSET);
+	// memset(sib_start, NONE, num_copy * NL_OFFSET);
+
+	// if (pos > mid_key) {
+	// 	// insert in sibling
+	// 	sibling.insert(key, pid);
+	// 	printf("BTNonLeafNode::insertAndSplit() - insert key = %d in the sibling\n", key);
+	// } else {
+	// 	// insert in current node
+	// 	insert(key, pid);
+	// 	printf("BTNonLeafNode::insertAndSplit() - insert key = %d in the sibling\n", key);
+	// }
+	
+	// PageId siblingPid;
+	// sibling.readEntry(0, midKey, siblingPid);
 	return 0;
 }
 
@@ -393,10 +437,13 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid)
 {
 	int idx;
 	locate(searchKey, idx);
+	printf("BTNonLeafNode::locateChildPtr - idx = %d\n", idx);
 
 	if (idx >= getKeyCount()) {
 		idx = getKeyCount() - 1;
 	}
+
+	printf("BTNonLeafNode::locateChildPtr - after tweak, idx = %d\n", idx);
 
 	char *keyLoc = buffer + PID_SIZE + (idx * NL_OFFSET);
 

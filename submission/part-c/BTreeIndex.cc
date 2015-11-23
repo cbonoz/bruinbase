@@ -270,7 +270,7 @@ RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
         if (DEBUG) printf("BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:\n");
         newSiblingNode.printKeys();
 
-        if (treeHeight == insertAtLevel) {
+        if (treeHeight <= insertAtLevel) {
             if (DEBUG) printf("BTreeIndex::insertInParent() - hey! you increased the level\n");
             // get pid of the parent node of the current node
             BTNonLeafNode newGrandRootNode;

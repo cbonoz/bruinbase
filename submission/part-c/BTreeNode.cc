@@ -310,6 +310,9 @@ RC BTNonLeafNode::write(PageId pid, PageFile& pf)
 int BTNonLeafNode::getKeyCount()
 {
 	char *kstart = buffer;
+	// char *end = buffer+P_SIZE-PID_SIZE;
+	// char *end = buffer + (N_KEY * NL_OFFSET);
+	// ONE
 	char *end = buffer + (N_KEY * NL_OFFSET) + PID_SIZE;
 	int curPid;
 	int i = 0;
@@ -326,7 +329,7 @@ int BTNonLeafNode::getKeyCount()
 		kstart += NL_OFFSET;
 		i++;
 	}
-
+    
 	return (i > N_KEY) ? (i-1) : i;
 }
 
@@ -341,6 +344,8 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 	int pos;
 	// find key location
 	BTNonLeafNode::locate(key, pos);
+    // printf("BTNonLeafNode::insert() - located pos = %d\n", pos);
+    // printf("BTNonLeafNode::insert() - CHECKPOINT getKeyCount = %d keys\n", getKeyCount());
 	// printf("located key pos = %d\n", pos);
 	// find copy location
 	char *loc = buffer + PID_SIZE + pos * NL_OFFSET;
@@ -353,7 +358,7 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 	memcpy(loc, &key, K_SIZE);
 	loc += K_SIZE;
 	memcpy(loc, &pid, PID_SIZE);
-
+    
 	return 0;
 }
 

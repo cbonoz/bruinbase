@@ -1,0 +1,3418 @@
+
++++ BTreeIndex::insertKey(): Key = 100, recordId = <1, 1>
+BTreeIndex::insert() - path initialized
+BTreeIndex::insert() - empty tree
+BTreeIndex::insert() - insert into root node
+BTreeIndex::insert() - pf.endPid() = 1
+BTreeIndex::insert() - root node written back to pf where rootPid = 1
+BTreeIndex::insert() - and now the root node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	
+
++++ BTreeIndex::insertKey(): Key = 300, recordId = <3, 3>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 1
+BTreeIndex::locate() - reached leaf level, leaf pid = 1, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 1
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(3, 3), 300]	
+
++++ BTreeIndex::insertKey(): Key = 500, recordId = <5, 5>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 1
+BTreeIndex::locate() - reached leaf level, leaf pid = 1, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(3, 3), 300]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 1
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(3, 3), 300]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(3, 3), 300]	[(5, 5), 500]	
+
++++ BTreeIndex::insertKey(): Key = 200, recordId = <2, 2>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 1
+BTreeIndex::locate() - reached leaf level, leaf pid = 1, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(3, 3), 300]	[(5, 5), 500]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 1
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(3, 3), 300]	[(5, 5), 500]	
+BTreeIndex::insert() - no space, sibling pid = 2 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(2, 2), 200]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(3, 3), 300]	[(5, 5), 500]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 300
+BTreeIndex::insert() - after split, next ptr of target leafnode is 2
+BTreeIndex::insert() - now insert siblingKey = 300 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 2
+BTreeIndex::insertInParent() - currentPid = 1
+BTreeIndex::insertInParent() - current node is already the root node
+BTreeIndex::insertInParent() - current leaf root node is a leaf node, create a new root node now
+
++++ BTreeIndex::insertKey(): Key = 600, recordId = <6, 6>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 2
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	
+BTreeIndex::locate() - we are tracking, current pid = 3
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 2
+BTreeIndex::locate() - reached leaf level, leaf pid = 2, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(3, 3), 300]	[(5, 5), 500]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 2
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(3, 3), 300]	[(5, 5), 500]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(3, 3), 300]	[(5, 5), 500]	[(6, 6), 600]	
+
++++ BTreeIndex::insertKey(): Key = 400, recordId = <4, 4>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 2
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	
+BTreeIndex::locate() - we are tracking, current pid = 3
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 2
+BTreeIndex::locate() - reached leaf level, leaf pid = 2, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(3, 3), 300]	[(5, 5), 500]	[(6, 6), 600]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 2
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(3, 3), 300]	[(5, 5), 500]	[(6, 6), 600]	
+BTreeIndex::insert() - no space, sibling pid = 4 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(3, 3), 300]	[(4, 4), 400]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(5, 5), 500]	[(6, 6), 600]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 500
+BTreeIndex::insert() - after split, next ptr of target leafnode is 4
+BTreeIndex::insert() - now insert siblingKey = 500 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 4
+BTreeIndex::insertInParent() - currentPid = 2
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 3
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+
++++ BTreeIndex::insertKey(): Key = 800, recordId = <8, 8>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 2
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTreeIndex::locate() - we are tracking, current pid = 3
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 4
+BTreeIndex::locate() - reached leaf level, leaf pid = 4, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(5, 5), 500]	[(6, 6), 600]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 4
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(5, 5), 500]	[(6, 6), 600]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(5, 5), 500]	[(6, 6), 600]	[(8, 8), 800]	
+
++++ BTreeIndex::insertKey(): Key = 700, recordId = <7, 7>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 2
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTreeIndex::locate() - we are tracking, current pid = 3
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 4
+BTreeIndex::locate() - reached leaf level, leaf pid = 4, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(5, 5), 500]	[(6, 6), 600]	[(8, 8), 800]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 4
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(5, 5), 500]	[(6, 6), 600]	[(8, 8), 800]	
+BTreeIndex::insert() - no space, sibling pid = 5 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(5, 5), 500]	[(6, 6), 600]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 700
+BTreeIndex::insert() - after split, next ptr of target leafnode is 5
+BTreeIndex::insert() - now insert siblingKey = 700 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 5
+BTreeIndex::insertInParent() - currentPid = 4
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 3
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	[4, 700]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	[4, 700]	
+
++++ BTreeIndex::insertKey(): Key = 1200, recordId = <12, 12>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 2
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	[4, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 3
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 5
+BTreeIndex::locate() - reached leaf level, leaf pid = 5, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 5
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	[(12, 12), 1200]	
+
++++ BTreeIndex::insertKey(): Key = 3000, recordId = <30, 30>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 2
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	[4, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 3
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 5
+BTreeIndex::locate() - reached leaf level, leaf pid = 5, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	[(12, 12), 1200]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 5
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	[(12, 12), 1200]	
+BTreeIndex::insert() - no space, sibling pid = 6 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(30, 30), 3000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 1200
+BTreeIndex::insert() - after split, next ptr of target leafnode is 6
+BTreeIndex::insert() - now insert siblingKey = 1200 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 6
+BTreeIndex::insertInParent() - currentPid = 5
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 3
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	[4, 700]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 1200
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 7
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 3
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	[4, 700]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	
+BTreeIndex::insertInParent() - hey! you increased the level
+BTreeIndex::insertInParent() - pushed grandRootPid, parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - grandParentPid = 8
+BTreeIndex::insertInParent() - newGrandRootNode is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+
+~~~~~~~BTreeIndex::insertInParent() - NOW treeHeight is 3
+BTreeIndex::insertInParent() - the new rootPid = 8, treeHeight = 3:
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 3
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 1
+BTreeIndex::locate() - reached leaf level, leaf pid = 1, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(2, 2), 200]	
+BTreeIndex::locate() - we are tracking, leaf eid = 0
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 3
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 2
+BTreeIndex::locate() - reached leaf level, leaf pid = 2, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(3, 3), 300]	[(4, 4), 400]	
+BTreeIndex::locate() - we are tracking, leaf eid = 0
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 3
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 4
+BTreeIndex::locate() - reached leaf level, leaf pid = 4, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(5, 5), 500]	[(6, 6), 600]	
+BTreeIndex::locate() - we are tracking, leaf eid = 0
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 5
+BTreeIndex::locate() - reached leaf level, leaf pid = 5, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 6
+BTreeIndex::locate() - reached leaf level, leaf pid = 6, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+
++++ BTreeIndex::insertKey(): Key = 1500, recordId = <15, 15>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	
+BTreeIndex::locate() - we are tracking, current pid = 7
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 6
+BTreeIndex::locate() - reached leaf level, leaf pid = 6, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 6
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(30, 30), 3000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(15, 15), 1500]	[(30, 30), 3000]	
+
++++ BTreeIndex::insertKey(): Key = 1400, recordId = <14, 14>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	
+BTreeIndex::locate() - we are tracking, current pid = 7
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 6
+BTreeIndex::locate() - reached leaf level, leaf pid = 6, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(15, 15), 1500]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 6
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(15, 15), 1500]	[(30, 30), 3000]	
+BTreeIndex::insert() - no space, sibling pid = 9 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(14, 14), 1400]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(30, 30), 3000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 1500
+BTreeIndex::insert() - after split, next ptr of target leafnode is 9
+BTreeIndex::insert() - now insert siblingKey = 1500 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 9
+BTreeIndex::insertInParent() - currentPid = 6
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 7
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	[6, 1500]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	[6, 1500]	
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	[6, 1500]	
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 6
+BTreeIndex::locate() - reached leaf level, leaf pid = 6, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(14, 14), 1400]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	[6, 1500]	
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 9
+BTreeIndex::locate() - reached leaf level, leaf pid = 9, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+
++++ BTreeIndex::insertKey(): Key = 1000, recordId = <10, 10>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	[6, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 7
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 5
+BTreeIndex::locate() - reached leaf level, leaf pid = 5, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 5
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	[(10, 10), 1000]	
+
++++ BTreeIndex::insertKey(): Key = 900, recordId = <9, 9>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	[6, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 7
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 5
+BTreeIndex::locate() - reached leaf level, leaf pid = 5, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	[(10, 10), 1000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 5
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	[(10, 10), 1000]	
+BTreeIndex::insert() - no space, sibling pid = 10 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(7, 7), 700]	[(8, 8), 800]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(9, 9), 900]	[(10, 10), 1000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 900
+BTreeIndex::insert() - after split, next ptr of target leafnode is 10
+BTreeIndex::insert() - now insert siblingKey = 900 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 10
+BTreeIndex::insertInParent() - currentPid = 5
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 7
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[5, 1200]	[6, 1500]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 0
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	[6, 1500]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	[6, 1500]	
+
++++ BTreeIndex::insertKey(): Key = 1100, recordId = <11, 11>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	[6, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 7
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 10
+BTreeIndex::locate() - reached leaf level, leaf pid = 10, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(9, 9), 900]	[(10, 10), 1000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 10
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(9, 9), 900]	[(10, 10), 1000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(9, 9), 900]	[(10, 10), 1000]	[(11, 11), 1100]	
+
++++ BTreeIndex::insertKey(): Key = 1300, recordId = <13, 13>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	[6, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 7
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 6
+BTreeIndex::locate() - reached leaf level, leaf pid = 6, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(14, 14), 1400]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 6
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(14, 14), 1400]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(12, 12), 1200]	[(13, 13), 1300]	[(14, 14), 1400]	
+
++++ BTreeIndex::insertKey(): Key = 1600, recordId = <16, 16>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	[6, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 7
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 9
+BTreeIndex::locate() - reached leaf level, leaf pid = 9, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 9
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(30, 30), 3000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	[(30, 30), 3000]	
+
++++ BTreeIndex::insertKey(): Key = 1900, recordId = <19, 19>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 7
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	[6, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 7
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 9
+BTreeIndex::locate() - reached leaf level, leaf pid = 9, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 9
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	[(30, 30), 3000]	
+BTreeIndex::insert() - no space, sibling pid = 11 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(19, 19), 1900]	[(30, 30), 3000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 1900
+BTreeIndex::insert() - after split, next ptr of target leafnode is 11
+BTreeIndex::insert() - now insert siblingKey = 1900 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 11
+BTreeIndex::insertInParent() - currentPid = 9
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 7
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	[6, 1500]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 1900
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 12
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 7
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	[6, 1500]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[5, 900]	[10, 1200]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[9, 1900]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 12
+BTreeIndex::insertInParent() - currentPid = 7
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 8
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+
++++ BTreeIndex::insertKey(): Key = 1700, recordId = <17, 17>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 12
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[9, 1900]	
+BTreeIndex::locate() - we are tracking, current pid = 12
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 9
+BTreeIndex::locate() - reached leaf level, leaf pid = 9, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 9
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	[(17, 17), 1700]	
+
++++ BTreeIndex::insertKey(): Key = 1800, recordId = <18, 18>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 12
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[9, 1900]	
+BTreeIndex::locate() - we are tracking, current pid = 12
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 9
+BTreeIndex::locate() - reached leaf level, leaf pid = 9, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	[(17, 17), 1700]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 9
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	[(17, 17), 1700]	
+BTreeIndex::insert() - no space, sibling pid = 13 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(17, 17), 1700]	[(18, 18), 1800]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 1700
+BTreeIndex::insert() - after split, next ptr of target leafnode is 13
+BTreeIndex::insert() - now insert siblingKey = 1700 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 13
+BTreeIndex::insertInParent() - currentPid = 9
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 12
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[9, 1900]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 0
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	
+
++++ BTreeIndex::insertKey(): Key = 2000, recordId = <20, 20>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 12
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	
+BTreeIndex::locate() - we are tracking, current pid = 12
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 11
+BTreeIndex::locate() - reached leaf level, leaf pid = 11, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(19, 19), 1900]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 11
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(19, 19), 1900]	[(30, 30), 3000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(19, 19), 1900]	[(20, 20), 2000]	[(30, 30), 3000]	
+
++++ BTreeIndex::insertKey(): Key = 2100, recordId = <21, 21>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 12
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	
+BTreeIndex::locate() - we are tracking, current pid = 12
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 11
+BTreeIndex::locate() - reached leaf level, leaf pid = 11, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(19, 19), 1900]	[(20, 20), 2000]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 11
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(19, 19), 1900]	[(20, 20), 2000]	[(30, 30), 3000]	
+BTreeIndex::insert() - no space, sibling pid = 14 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(19, 19), 1900]	[(20, 20), 2000]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(21, 21), 2100]	[(30, 30), 3000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 2100
+BTreeIndex::insert() - after split, next ptr of target leafnode is 14
+BTreeIndex::insert() - now insert siblingKey = 2100 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 14
+BTreeIndex::insertInParent() - currentPid = 11
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 12
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	[11, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	[11, 2100]	
+
++++ BTreeIndex::insertKey(): Key = 2200, recordId = <22, 22>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 12
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	[11, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 12
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 14
+BTreeIndex::locate() - reached leaf level, leaf pid = 14, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(21, 21), 2100]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 14
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(21, 21), 2100]	[(30, 30), 3000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(21, 21), 2100]	[(22, 22), 2200]	[(30, 30), 3000]	
+
++++ BTreeIndex::insertKey(): Key = 2300, recordId = <23, 23>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 12
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	[11, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 12
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 14
+BTreeIndex::locate() - reached leaf level, leaf pid = 14, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(21, 21), 2100]	[(22, 22), 2200]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 14
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(21, 21), 2100]	[(22, 22), 2200]	[(30, 30), 3000]	
+BTreeIndex::insert() - no space, sibling pid = 15 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(21, 21), 2100]	[(22, 22), 2200]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 23), 2300]	[(30, 30), 3000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 2300
+BTreeIndex::insert() - after split, next ptr of target leafnode is 15
+BTreeIndex::insert() - now insert siblingKey = 2300 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 15
+BTreeIndex::insertInParent() - currentPid = 14
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 12
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	[11, 2100]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 2300
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 16
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 12
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	[11, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 16
+BTreeIndex::insertInParent() - currentPid = 12
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 8
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+
++++ BTreeIndex::insertKey(): Key = 2400, recordId = <24, 24>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 16
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	
+BTreeIndex::locate() - we are tracking, current pid = 16
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 15
+BTreeIndex::locate() - reached leaf level, leaf pid = 15, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 23), 2300]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 15
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 23), 2300]	[(30, 30), 3000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 23), 2300]	[(24, 24), 2400]	[(30, 30), 3000]	
+
++++ BTreeIndex::insertKey(): Key = 2500, recordId = <25, 25>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 16
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	
+BTreeIndex::locate() - we are tracking, current pid = 16
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 15
+BTreeIndex::locate() - reached leaf level, leaf pid = 15, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 23), 2300]	[(24, 24), 2400]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 15
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 23), 2300]	[(24, 24), 2400]	[(30, 30), 3000]	
+BTreeIndex::insert() - no space, sibling pid = 17 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 23), 2300]	[(24, 24), 2400]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(25, 25), 2500]	[(30, 30), 3000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 2500
+BTreeIndex::insert() - after split, next ptr of target leafnode is 17
+BTreeIndex::insert() - now insert siblingKey = 2500 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 17
+BTreeIndex::insertInParent() - currentPid = 15
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 16
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	
+
++++ BTreeIndex::insertKey(): Key = 2600, recordId = <26, 26>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 16
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	
+BTreeIndex::locate() - we are tracking, current pid = 16
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 17
+BTreeIndex::locate() - reached leaf level, leaf pid = 17, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(25, 25), 2500]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 17
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(25, 25), 2500]	[(30, 30), 3000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(25, 25), 2500]	[(26, 26), 2600]	[(30, 30), 3000]	
+
++++ BTreeIndex::insertKey(): Key = 2700, recordId = <27, 27>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 16
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	
+BTreeIndex::locate() - we are tracking, current pid = 16
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 17
+BTreeIndex::locate() - reached leaf level, leaf pid = 17, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(25, 25), 2500]	[(26, 26), 2600]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 17
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(25, 25), 2500]	[(26, 26), 2600]	[(30, 30), 3000]	
+BTreeIndex::insert() - no space, sibling pid = 18 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(25, 25), 2500]	[(26, 26), 2600]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(27, 27), 2700]	[(30, 30), 3000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 2700
+BTreeIndex::insert() - after split, next ptr of target leafnode is 18
+BTreeIndex::insert() - now insert siblingKey = 2700 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 18
+BTreeIndex::insertInParent() - currentPid = 17
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 16
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	[17, 2700]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	[17, 2700]	
+
++++ BTreeIndex::insertKey(): Key = 2800, recordId = <28, 28>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 16
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	[17, 2700]	
+BTreeIndex::locate() - we are tracking, current pid = 16
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 18
+BTreeIndex::locate() - reached leaf level, leaf pid = 18, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(27, 27), 2700]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 18
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(27, 27), 2700]	[(30, 30), 3000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(27, 27), 2700]	[(28, 28), 2800]	[(30, 30), 3000]	
+
++++ BTreeIndex::insertKey(): Key = 2900, recordId = <29, 29>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 16
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	[17, 2700]	
+BTreeIndex::locate() - we are tracking, current pid = 16
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 18
+BTreeIndex::locate() - reached leaf level, leaf pid = 18, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(27, 27), 2700]	[(28, 28), 2800]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 18
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(27, 27), 2700]	[(28, 28), 2800]	[(30, 30), 3000]	
+BTreeIndex::insert() - no space, sibling pid = 19 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(27, 27), 2700]	[(28, 28), 2800]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(29, 29), 2900]	[(30, 30), 3000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 2900
+BTreeIndex::insert() - after split, next ptr of target leafnode is 19
+BTreeIndex::insert() - now insert siblingKey = 2900 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 19
+BTreeIndex::insertInParent() - currentPid = 18
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 16
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	[17, 2700]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 2900
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 20
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 16
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	[17, 2700]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[14, 2300]	[15, 2500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[18, 2900]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 20
+BTreeIndex::insertInParent() - currentPid = 16
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 8
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 2700
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 21
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 8
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 21
+BTreeIndex::insertInParent() - currentPid = 8
+BTreeIndex::insertInParent() - current node is already the root node
+BTreeIndex::insertInParent() - current key # is 2
+BTreeIndex::insertInParent() - current nonleaf root node is NOT full, insert safely
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+
++++ BTreeIndex::insertKey(): Key = 3000, recordId = <30, 30>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 21
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	
+BTreeIndex::locate() - we are tracking, current pid = 21
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 20
+BTreeIndex::locate() - reached leaf level, leaf pid = 20, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 20
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	[(30, 30), 3000]	
+
++++ BTreeIndex::insertKey(): Key = 3100, recordId = <31, 31>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 21
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	
+BTreeIndex::locate() - we are tracking, current pid = 21
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 20
+BTreeIndex::locate() - reached leaf level, leaf pid = 20, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	[(30, 30), 3000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 20
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	[(30, 30), 3000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	[(30, 30), 3000]	[(31, 31), 3100]	
+
++++ BTreeIndex::insertKey(): Key = 3200, recordId = <32, 32>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 21
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	
+BTreeIndex::locate() - we are tracking, current pid = 21
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 20
+BTreeIndex::locate() - reached leaf level, leaf pid = 20, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	[(30, 30), 3000]	[(31, 31), 3100]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 20
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	[(30, 30), 3000]	[(31, 31), 3100]	
+BTreeIndex::insert() - no space, sibling pid = 22 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(18, 2900), 19]	[(30, 30), 3000]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(31, 31), 3100]	[(32, 32), 3200]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 3100
+BTreeIndex::insert() - after split, next ptr of target leafnode is 22
+BTreeIndex::insert() - now insert siblingKey = 3100 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 22
+BTreeIndex::insertInParent() - currentPid = 20
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 21
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	
+
++++ BTreeIndex::insertKey(): Key = 3300, recordId = <33, 33>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 21
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	
+BTreeIndex::locate() - we are tracking, current pid = 21
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 22
+BTreeIndex::locate() - reached leaf level, leaf pid = 22, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(31, 31), 3100]	[(32, 32), 3200]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 22
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(31, 31), 3100]	[(32, 32), 3200]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(31, 31), 3100]	[(32, 32), 3200]	[(33, 33), 3300]	
+
++++ BTreeIndex::insertKey(): Key = 3400, recordId = <34, 34>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 21
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	
+BTreeIndex::locate() - we are tracking, current pid = 21
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 22
+BTreeIndex::locate() - reached leaf level, leaf pid = 22, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(31, 31), 3100]	[(32, 32), 3200]	[(33, 33), 3300]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 22
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(31, 31), 3100]	[(32, 32), 3200]	[(33, 33), 3300]	
+BTreeIndex::insert() - no space, sibling pid = 23 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(31, 31), 3100]	[(32, 32), 3200]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 33), 3300]	[(34, 34), 3400]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 3300
+BTreeIndex::insert() - after split, next ptr of target leafnode is 23
+BTreeIndex::insert() - now insert siblingKey = 3300 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 23
+BTreeIndex::insertInParent() - currentPid = 22
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 21
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	[22, 3300]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	[22, 3300]	
+
++++ BTreeIndex::insertKey(): Key = 3500, recordId = <35, 35>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 21
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	[22, 3300]	
+BTreeIndex::locate() - we are tracking, current pid = 21
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 23
+BTreeIndex::locate() - reached leaf level, leaf pid = 23, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 33), 3300]	[(34, 34), 3400]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 23
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 33), 3300]	[(34, 34), 3400]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 33), 3300]	[(34, 34), 3400]	[(35, 35), 3500]	
+
++++ BTreeIndex::insertKey(): Key = 3600, recordId = <36, 36>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 21
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	[22, 3300]	
+BTreeIndex::locate() - we are tracking, current pid = 21
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 23
+BTreeIndex::locate() - reached leaf level, leaf pid = 23, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 33), 3300]	[(34, 34), 3400]	[(35, 35), 3500]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 23
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 33), 3300]	[(34, 34), 3400]	[(35, 35), 3500]	
+BTreeIndex::insert() - no space, sibling pid = 24 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 33), 3300]	[(34, 34), 3400]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(35, 35), 3500]	[(36, 36), 3600]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 3500
+BTreeIndex::insert() - after split, next ptr of target leafnode is 24
+BTreeIndex::insert() - now insert siblingKey = 3500 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 24
+BTreeIndex::insertInParent() - currentPid = 23
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 21
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	[22, 3300]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 3500
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 25
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 21
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	[22, 3300]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[16, 2700]	[20, 3100]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[23, 3500]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 25
+BTreeIndex::insertInParent() - currentPid = 21
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 8
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 3300
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 26
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 8
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 26
+BTreeIndex::insertInParent() - currentPid = 8
+BTreeIndex::insertInParent() - current node is already the root node
+BTreeIndex::insertInParent() - current key # is 2
+BTreeIndex::insertInParent() - current nonleaf root node is NOT full, insert safely
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+
++++ BTreeIndex::insertKey(): Key = 3700, recordId = <37, 37>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 26
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	
+BTreeIndex::locate() - we are tracking, current pid = 26
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 25
+BTreeIndex::locate() - reached leaf level, leaf pid = 25, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 25
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	[(37, 37), 3700]	
+
++++ BTreeIndex::insertKey(): Key = 3800, recordId = <38, 38>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 26
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	
+BTreeIndex::locate() - we are tracking, current pid = 26
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 25
+BTreeIndex::locate() - reached leaf level, leaf pid = 25, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	[(37, 37), 3700]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 25
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	[(37, 37), 3700]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	[(37, 37), 3700]	[(38, 38), 3800]	
+
++++ BTreeIndex::insertKey(): Key = 3900, recordId = <39, 39>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 26
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	
+BTreeIndex::locate() - we are tracking, current pid = 26
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 25
+BTreeIndex::locate() - reached leaf level, leaf pid = 25, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	[(37, 37), 3700]	[(38, 38), 3800]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 25
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	[(37, 37), 3700]	[(38, 38), 3800]	
+BTreeIndex::insert() - no space, sibling pid = 27 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(23, 3500), 24]	[(37, 37), 3700]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 38), 3800]	[(39, 39), 3900]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 3800
+BTreeIndex::insert() - after split, next ptr of target leafnode is 27
+BTreeIndex::insert() - now insert siblingKey = 3800 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 27
+BTreeIndex::insertInParent() - currentPid = 25
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 26
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	
+
++++ BTreeIndex::insertKey(): Key = 4000, recordId = <40, 40>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 26
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	
+BTreeIndex::locate() - we are tracking, current pid = 26
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 27
+BTreeIndex::locate() - reached leaf level, leaf pid = 27, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 38), 3800]	[(39, 39), 3900]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 27
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 38), 3800]	[(39, 39), 3900]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 38), 3800]	[(39, 39), 3900]	[(40, 40), 4000]	
+
++++ BTreeIndex::insertKey(): Key = 4100, recordId = <41, 41>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 26
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	
+BTreeIndex::locate() - we are tracking, current pid = 26
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 27
+BTreeIndex::locate() - reached leaf level, leaf pid = 27, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 38), 3800]	[(39, 39), 3900]	[(40, 40), 4000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 27
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 38), 3800]	[(39, 39), 3900]	[(40, 40), 4000]	
+BTreeIndex::insert() - no space, sibling pid = 28 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 38), 3800]	[(39, 39), 3900]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(40, 40), 4000]	[(41, 41), 4100]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 4000
+BTreeIndex::insert() - after split, next ptr of target leafnode is 28
+BTreeIndex::insert() - now insert siblingKey = 4000 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 28
+BTreeIndex::insertInParent() - currentPid = 27
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 26
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	[27, 4000]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	[27, 4000]	
+
++++ BTreeIndex::insertKey(): Key = 4200, recordId = <42, 42>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 26
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	[27, 4000]	
+BTreeIndex::locate() - we are tracking, current pid = 26
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 28
+BTreeIndex::locate() - reached leaf level, leaf pid = 28, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(40, 40), 4000]	[(41, 41), 4100]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 28
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(40, 40), 4000]	[(41, 41), 4100]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(40, 40), 4000]	[(41, 41), 4100]	[(42, 42), 4200]	
+
++++ BTreeIndex::insertKey(): Key = 4300, recordId = <43, 43>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 26
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	[27, 4000]	
+BTreeIndex::locate() - we are tracking, current pid = 26
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 28
+BTreeIndex::locate() - reached leaf level, leaf pid = 28, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(40, 40), 4000]	[(41, 41), 4100]	[(42, 42), 4200]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 28
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(40, 40), 4000]	[(41, 41), 4100]	[(42, 42), 4200]	
+BTreeIndex::insert() - no space, sibling pid = 29 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(40, 40), 4000]	[(41, 41), 4100]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(42, 42), 4200]	[(43, 43), 4300]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 4200
+BTreeIndex::insert() - after split, next ptr of target leafnode is 29
+BTreeIndex::insert() - now insert siblingKey = 4200 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 29
+BTreeIndex::insertInParent() - currentPid = 28
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 26
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	[27, 4000]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 4200
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 30
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 26
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	[27, 4000]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[21, 3300]	[25, 3800]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[28, 4200]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 30
+BTreeIndex::insertInParent() - currentPid = 26
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 8
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 4000
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 31
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 8
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 31
+BTreeIndex::insertInParent() - currentPid = 8
+BTreeIndex::insertInParent() - current node is already the root node
+BTreeIndex::insertInParent() - current key # is 2
+BTreeIndex::insertInParent() - current nonleaf root node is NOT full, insert safely
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+
++++ BTreeIndex::insertKey(): Key = 4400, recordId = <44, 44>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 31
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	
+BTreeIndex::locate() - we are tracking, current pid = 31
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 30
+BTreeIndex::locate() - reached leaf level, leaf pid = 30, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 30
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	[(44, 44), 4400]	
+
++++ BTreeIndex::insertKey(): Key = 4500, recordId = <45, 45>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 31
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	
+BTreeIndex::locate() - we are tracking, current pid = 31
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 30
+BTreeIndex::locate() - reached leaf level, leaf pid = 30, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	[(44, 44), 4400]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 30
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	[(44, 44), 4400]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	[(44, 44), 4400]	[(45, 45), 4500]	
+
++++ BTreeIndex::insertKey(): Key = 4600, recordId = <46, 46>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 31
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	
+BTreeIndex::locate() - we are tracking, current pid = 31
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 30
+BTreeIndex::locate() - reached leaf level, leaf pid = 30, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	[(44, 44), 4400]	[(45, 45), 4500]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 30
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	[(44, 44), 4400]	[(45, 45), 4500]	
+BTreeIndex::insert() - no space, sibling pid = 32 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(28, 4200), 29]	[(44, 44), 4400]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(45, 45), 4500]	[(46, 46), 4600]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 4500
+BTreeIndex::insert() - after split, next ptr of target leafnode is 32
+BTreeIndex::insert() - now insert siblingKey = 4500 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 32
+BTreeIndex::insertInParent() - currentPid = 30
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 31
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	
+
++++ BTreeIndex::insertKey(): Key = 4700, recordId = <47, 47>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 31
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	
+BTreeIndex::locate() - we are tracking, current pid = 31
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 32
+BTreeIndex::locate() - reached leaf level, leaf pid = 32, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(45, 45), 4500]	[(46, 46), 4600]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 32
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(45, 45), 4500]	[(46, 46), 4600]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(45, 45), 4500]	[(46, 46), 4600]	[(47, 47), 4700]	
+
++++ BTreeIndex::insertKey(): Key = 4800, recordId = <48, 48>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 31
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	
+BTreeIndex::locate() - we are tracking, current pid = 31
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 32
+BTreeIndex::locate() - reached leaf level, leaf pid = 32, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(45, 45), 4500]	[(46, 46), 4600]	[(47, 47), 4700]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 32
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(45, 45), 4500]	[(46, 46), 4600]	[(47, 47), 4700]	
+BTreeIndex::insert() - no space, sibling pid = 33 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(45, 45), 4500]	[(46, 46), 4600]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(47, 47), 4700]	[(48, 48), 4800]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 4700
+BTreeIndex::insert() - after split, next ptr of target leafnode is 33
+BTreeIndex::insert() - now insert siblingKey = 4700 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 33
+BTreeIndex::insertInParent() - currentPid = 32
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 31
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	[32, 4700]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	[32, 4700]	
+
++++ BTreeIndex::insertKey(): Key = 4900, recordId = <49, 49>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 31
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	[32, 4700]	
+BTreeIndex::locate() - we are tracking, current pid = 31
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 33
+BTreeIndex::locate() - reached leaf level, leaf pid = 33, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(47, 47), 4700]	[(48, 48), 4800]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 33
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(47, 47), 4700]	[(48, 48), 4800]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(47, 47), 4700]	[(48, 48), 4800]	[(49, 49), 4900]	
+
++++ BTreeIndex::insertKey(): Key = 5000, recordId = <50, 50>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 31
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	[32, 4700]	
+BTreeIndex::locate() - we are tracking, current pid = 31
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 33
+BTreeIndex::locate() - reached leaf level, leaf pid = 33, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(47, 47), 4700]	[(48, 48), 4800]	[(49, 49), 4900]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 33
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(47, 47), 4700]	[(48, 48), 4800]	[(49, 49), 4900]	
+BTreeIndex::insert() - no space, sibling pid = 34 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(47, 47), 4700]	[(48, 48), 4800]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(49, 49), 4900]	[(50, 50), 5000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 4900
+BTreeIndex::insert() - after split, next ptr of target leafnode is 34
+BTreeIndex::insert() - now insert siblingKey = 4900 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 34
+BTreeIndex::insertInParent() - currentPid = 33
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 31
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	[32, 4700]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 4900
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 35
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 31
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	[32, 4700]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[26, 4000]	[30, 4500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[33, 4900]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 35
+BTreeIndex::insertInParent() - currentPid = 31
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 8
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 4700
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 36
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 8
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 36
+BTreeIndex::insertInParent() - currentPid = 8
+BTreeIndex::insertInParent() - current node is already the root node
+BTreeIndex::insertInParent() - current key # is 2
+BTreeIndex::insertInParent() - current nonleaf root node is NOT full, insert safely
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+
++++ BTreeIndex::insertKey(): Key = 5100, recordId = <51, 51>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 36
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	
+BTreeIndex::locate() - we are tracking, current pid = 36
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 35
+BTreeIndex::locate() - reached leaf level, leaf pid = 35, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 35
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	[(51, 51), 5100]	
+
++++ BTreeIndex::insertKey(): Key = 5200, recordId = <52, 52>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 36
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	
+BTreeIndex::locate() - we are tracking, current pid = 36
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 35
+BTreeIndex::locate() - reached leaf level, leaf pid = 35, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	[(51, 51), 5100]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 35
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	[(51, 51), 5100]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	[(51, 51), 5100]	[(52, 52), 5200]	
+
++++ BTreeIndex::insertKey(): Key = 5300, recordId = <53, 53>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 36
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	
+BTreeIndex::locate() - we are tracking, current pid = 36
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 35
+BTreeIndex::locate() - reached leaf level, leaf pid = 35, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	[(51, 51), 5100]	[(52, 52), 5200]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 35
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	[(51, 51), 5100]	[(52, 52), 5200]	
+BTreeIndex::insert() - no space, sibling pid = 37 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(33, 4900), 34]	[(51, 51), 5100]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(52, 52), 5200]	[(53, 53), 5300]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 5200
+BTreeIndex::insert() - after split, next ptr of target leafnode is 37
+BTreeIndex::insert() - now insert siblingKey = 5200 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 37
+BTreeIndex::insertInParent() - currentPid = 35
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 36
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	
+
++++ BTreeIndex::insertKey(): Key = 5400, recordId = <54, 54>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 36
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	
+BTreeIndex::locate() - we are tracking, current pid = 36
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 37
+BTreeIndex::locate() - reached leaf level, leaf pid = 37, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(52, 52), 5200]	[(53, 53), 5300]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 37
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(52, 52), 5200]	[(53, 53), 5300]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(52, 52), 5200]	[(53, 53), 5300]	[(54, 54), 5400]	
+
++++ BTreeIndex::insertKey(): Key = 5500, recordId = <55, 55>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 36
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	
+BTreeIndex::locate() - we are tracking, current pid = 36
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 37
+BTreeIndex::locate() - reached leaf level, leaf pid = 37, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(52, 52), 5200]	[(53, 53), 5300]	[(54, 54), 5400]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 37
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(52, 52), 5200]	[(53, 53), 5300]	[(54, 54), 5400]	
+BTreeIndex::insert() - no space, sibling pid = 38 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(52, 52), 5200]	[(53, 53), 5300]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(54, 54), 5400]	[(55, 55), 5500]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 5400
+BTreeIndex::insert() - after split, next ptr of target leafnode is 38
+BTreeIndex::insert() - now insert siblingKey = 5400 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 38
+BTreeIndex::insertInParent() - currentPid = 37
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 36
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	[37, 5400]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	[37, 5400]	
+
++++ BTreeIndex::insertKey(): Key = 5600, recordId = <56, 56>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 36
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	[37, 5400]	
+BTreeIndex::locate() - we are tracking, current pid = 36
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 38
+BTreeIndex::locate() - reached leaf level, leaf pid = 38, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(54, 54), 5400]	[(55, 55), 5500]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 38
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(54, 54), 5400]	[(55, 55), 5500]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(54, 54), 5400]	[(55, 55), 5500]	[(56, 56), 5600]	
+
++++ BTreeIndex::insertKey(): Key = 5700, recordId = <57, 57>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 36
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	[37, 5400]	
+BTreeIndex::locate() - we are tracking, current pid = 36
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 38
+BTreeIndex::locate() - reached leaf level, leaf pid = 38, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(54, 54), 5400]	[(55, 55), 5500]	[(56, 56), 5600]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 38
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(54, 54), 5400]	[(55, 55), 5500]	[(56, 56), 5600]	
+BTreeIndex::insert() - no space, sibling pid = 39 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(54, 54), 5400]	[(55, 55), 5500]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(56, 56), 5600]	[(57, 57), 5700]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 5600
+BTreeIndex::insert() - after split, next ptr of target leafnode is 39
+BTreeIndex::insert() - now insert siblingKey = 5600 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 39
+BTreeIndex::insertInParent() - currentPid = 38
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 36
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	[37, 5400]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 5600
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 40
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 36
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	[37, 5400]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[31, 4700]	[35, 5200]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[38, 5600]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 40
+BTreeIndex::insertInParent() - currentPid = 36
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 8
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 5400
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 41
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 8
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 41
+BTreeIndex::insertInParent() - currentPid = 8
+BTreeIndex::insertInParent() - current node is already the root node
+BTreeIndex::insertInParent() - current key # is 2
+BTreeIndex::insertInParent() - current nonleaf root node is NOT full, insert safely
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+
++++ BTreeIndex::insertKey(): Key = 5800, recordId = <58, 58>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 41
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	
+BTreeIndex::locate() - we are tracking, current pid = 41
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 40
+BTreeIndex::locate() - reached leaf level, leaf pid = 40, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	
+BTreeIndex::locate() - we are tracking, leaf eid = 1
+BTreeIndex::insert() - located target pid = 40
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	[(58, 58), 5800]	
+
++++ BTreeIndex::insertKey(): Key = 5900, recordId = <59, 59>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 41
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	
+BTreeIndex::locate() - we are tracking, current pid = 41
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 40
+BTreeIndex::locate() - reached leaf level, leaf pid = 40, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	[(58, 58), 5800]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 40
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	[(58, 58), 5800]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	[(58, 58), 5800]	[(59, 59), 5900]	
+
++++ BTreeIndex::insertKey(): Key = 6000, recordId = <60, 60>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 41
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	
+BTreeIndex::locate() - we are tracking, current pid = 41
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 40
+BTreeIndex::locate() - reached leaf level, leaf pid = 40, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	[(58, 58), 5800]	[(59, 59), 5900]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 40
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	[(58, 58), 5800]	[(59, 59), 5900]	
+BTreeIndex::insert() - no space, sibling pid = 42 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(38, 5600), 39]	[(58, 58), 5800]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(59, 59), 5900]	[(60, 60), 6000]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 5900
+BTreeIndex::insert() - after split, next ptr of target leafnode is 42
+BTreeIndex::insert() - now insert siblingKey = 5900 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 42
+BTreeIndex::insertInParent() - currentPid = 40
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 41
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	
+BTreeIndex::insertInParent() - current parent has 1 keys
+BTNonLeafNode::insert() - located pos = 1
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 1 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 2 keys
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	
+
++++ BTreeIndex::insertKey(): Key = 6100, recordId = <61, 61>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 41
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	
+BTreeIndex::locate() - we are tracking, current pid = 41
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 42
+BTreeIndex::locate() - reached leaf level, leaf pid = 42, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(59, 59), 5900]	[(60, 60), 6000]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 42
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(59, 59), 5900]	[(60, 60), 6000]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(59, 59), 5900]	[(60, 60), 6000]	[(61, 61), 6100]	
+
++++ BTreeIndex::insertKey(): Key = 6200, recordId = <62, 62>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 41
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	
+BTreeIndex::locate() - we are tracking, current pid = 41
+BTNonLeafNode::locateChildPtr - idx = 2
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 42
+BTreeIndex::locate() - reached leaf level, leaf pid = 42, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(59, 59), 5900]	[(60, 60), 6000]	[(61, 61), 6100]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 42
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(59, 59), 5900]	[(60, 60), 6000]	[(61, 61), 6100]	
+BTreeIndex::insert() - no space, sibling pid = 43 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(59, 59), 5900]	[(60, 60), 6000]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(61, 61), 6100]	[(62, 62), 6200]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 6100
+BTreeIndex::insert() - after split, next ptr of target leafnode is 43
+BTreeIndex::insert() - now insert siblingKey = 6100 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 43
+BTreeIndex::insertInParent() - currentPid = 42
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 41
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	
+BTreeIndex::insertInParent() - current parent has 2 keys
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	[42, 6100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - not full, after insert, the parent node is:
+BTreeIndex::insertInParent() - current parent has 3 keys
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	[42, 6100]	
+
++++ BTreeIndex::insertKey(): Key = 6300, recordId = <63, 63>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 41
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	[42, 6100]	
+BTreeIndex::locate() - we are tracking, current pid = 41
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 43
+BTreeIndex::locate() - reached leaf level, leaf pid = 43, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(61, 61), 6100]	[(62, 62), 6200]	
+BTreeIndex::locate() - we are tracking, leaf eid = 2
+BTreeIndex::insert() - located target pid = 43
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(61, 61), 6100]	[(62, 62), 6200]	
+BTreeIndex::insert() - targetLeafNode is not full, insert
+BTreeIndex::insert() - now after insert, the target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(61, 61), 6100]	[(62, 62), 6200]	[(63, 63), 6300]	
+
++++ BTreeIndex::insertKey(): Key = 6400, recordId = <64, 64>
+BTreeIndex::insert() - path initialized
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::locate() - we are tracking, current pid = 8
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 41
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	[42, 6100]	
+BTreeIndex::locate() - we are tracking, current pid = 41
+BTNonLeafNode::locateChildPtr - idx = 3
+BTNonLeafNode::locateChildPtr - after tweak, idx = 2
+BTreeIndex::locate() - located child ptr pid = 43
+BTreeIndex::locate() - reached leaf level, leaf pid = 43, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(61, 61), 6100]	[(62, 62), 6200]	[(63, 63), 6300]	
+BTreeIndex::locate() - we are tracking, leaf eid = 3
+BTreeIndex::insert() - located target pid = 43
+BTreeIndex::insert() - target leaf node just created (should be empty):
+=== Leaf Node: [rid(pid, sid), key] ===
+
+BTreeIndex::insert() - target leaf node read:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(61, 61), 6100]	[(62, 62), 6200]	[(63, 63), 6300]	
+BTreeIndex::insert() - no space, sibling pid = 44 and it is empty now
+BTreeIndex::insert() - pushed targetPid and siblingPid into the path
+BTreeIndex::insert() - after split, target leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(61, 61), 6100]	[(62, 62), 6200]	
+BTreeIndex::insert() - after split, sibling leaf node is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(63, 63), 6300]	[(64, 64), 6400]	
+BTreeIndex::insert() - now insert and split, get siblingKey = 6300
+BTreeIndex::insert() - after split, next ptr of target leafnode is 44
+BTreeIndex::insert() - now insert siblingKey = 6300 into its parent
+BTreeIndex::insertInParent() - insert siblingPid = 44
+BTreeIndex::insertInParent() - currentPid = 43
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 41
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	[42, 6100]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 6300
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 45
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 41
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	[42, 6100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[36, 5400]	[40, 5900]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[43, 6300]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 45
+BTreeIndex::insertInParent() - currentPid = 41
+BTreeIndex::insert() - else, insert into current node's parent
+BTreeIndex::insertInParent() - parentPid = 8
+BTreeIndex::insertInParent() - the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTreeIndex::insertInParent() - no space, should split - current parent has 3 keys
+BTreeIndex::insertInParent() - in the trouble, the siblingKey = 6100
+BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = 46
+BTreeIndex::insertInParent() - in the trouble, the currentPid = 8
+BTNonLeafNode::insert() - located pos = 3
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+BTreeIndex::insertInParent() - executed insertAndSplit
+BTreeIndex::insertInParent() - node full, after insert, the parent node is:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	
+BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:
+=== Non-leaf Node: [pid, key] ===
+[41, 6100]	
+BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path
+BTreeIndex::insertInParent() - insert siblingPid = 46
+BTreeIndex::insertInParent() - currentPid = 8
+BTreeIndex::insertInParent() - current node is already the root node
+BTreeIndex::insertInParent() - current key # is 2
+BTreeIndex::insertInParent() - current nonleaf root node is NOT full, insert safely
+BTNonLeafNode::insert() - located pos = 2
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 2 keys
+BTNonLeafNode::insert() - I am printing keys
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::insert() - CHECKPOINT getKeyCount = 3 keys
+
+
+
+test(): SPECIAL ATTEN
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::locateChildPtr - idx = 1
+BTNonLeafNode::locateChildPtr - after tweak, idx = 1
+BTreeIndex::locate() - located child ptr pid = 12
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[9, 1700]	[13, 1900]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 9
+BTreeIndex::locate() - reached leaf level, leaf pid = 9, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(15, 15), 1500]	[(16, 16), 1600]	
+BTreeIndex::locate() - we are tracking, leaf eid = 0
+
+
+
+test(): we are done inserting. Print tree info now:
+BTreeIndex::BTreeInfo - rootPid: 8
+BTreeIndex::BTreeInfo - treeHeight: 3
+test(): close the tree now:
+BTreeIndex::close() - written back the rootPid and treeHeight
+BTreeIndex::close() - pagefile closed
+
+
+test(): hello, we open you again, but in read mode
+test(): so we want to retrive tree info again
+BTreeIndex::BTreeInfo - rootPid: 8
+BTreeIndex::BTreeInfo - treeHeight: 3
+
+
+test(): we are locating key = 0 now
+BTreeIndex::locate() - path initialized
+BTreeIndex::locate() - treeHeight = 3
+BTreeIndex::locate() - current level = 1, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[3, 700]	[7, 1500]	[12, 2100]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 3
+BTreeIndex::locate() - current level = 2, non-leaf node read:
+=== Non-leaf Node: [pid, key] ===
+[1, 300]	[2, 500]	
+BTNonLeafNode::locateChildPtr - idx = 0
+BTNonLeafNode::locateChildPtr - after tweak, idx = 0
+BTreeIndex::locate() - located child ptr pid = 1
+BTreeIndex::locate() - reached leaf level, leaf pid = 1, and it is:
+=== Leaf Node: [rid(pid, sid), key] ===
+[(1, 1), 100]	[(2, 2), 200]	
+BTreeIndex::locate() - we are tracking, leaf eid = 0
+test(): Cursor at pageId = 1, eid = 0 
+BTreeIndex::readForward() - current pid = 1, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 100, rid.pid = 1, rid.sid = 1
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 1, cursor.eid = 1
+test() readForward for i = 1, key = 100 record pid = 1, record sid = 1.
+
+test(): Cursor at pageId = 1, eid = 1 
+BTreeIndex::readForward() - current pid = 1, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 200, rid.pid = 2, rid.sid = 2
+BTreeIndex::readForward() - getKeyCount() = 2, eid points to next node and now cursor.pid = 2, cursor.eid = 0
+test() readForward for i = 2, key = 200 record pid = 2, record sid = 2.
+
+test(): Cursor at pageId = 2, eid = 0 
+BTreeIndex::readForward() - current pid = 2, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 300, rid.pid = 3, rid.sid = 3
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 2, cursor.eid = 1
+test() readForward for i = 3, key = 300 record pid = 3, record sid = 3.
+
+test(): Cursor at pageId = 2, eid = 1 
+BTreeIndex::readForward() - current pid = 2, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 400, rid.pid = 4, rid.sid = 4
+BTreeIndex::readForward() - getKeyCount() = 2, eid points to next node and now cursor.pid = 4, cursor.eid = 0
+test() readForward for i = 4, key = 400 record pid = 4, record sid = 4.
+
+test(): Cursor at pageId = 4, eid = 0 
+BTreeIndex::readForward() - current pid = 4, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 500, rid.pid = 5, rid.sid = 5
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 4, cursor.eid = 1
+test() readForward for i = 5, key = 500 record pid = 5, record sid = 5.
+
+test(): Cursor at pageId = 4, eid = 1 
+BTreeIndex::readForward() - current pid = 4, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 600, rid.pid = 6, rid.sid = 6
+BTreeIndex::readForward() - getKeyCount() = 2, eid points to next node and now cursor.pid = 5, cursor.eid = 0
+test() readForward for i = 6, key = 600 record pid = 6, record sid = 6.
+
+test(): Cursor at pageId = 5, eid = 0 
+BTreeIndex::readForward() - current pid = 5, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 700, rid.pid = 7, rid.sid = 7
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 5, cursor.eid = 1
+test() readForward for i = 7, key = 700 record pid = 7, record sid = 7.
+
+test(): Cursor at pageId = 5, eid = 1 
+BTreeIndex::readForward() - current pid = 5, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 800, rid.pid = 8, rid.sid = 8
+BTreeIndex::readForward() - getKeyCount() = 2, eid points to next node and now cursor.pid = 10, cursor.eid = 0
+test() readForward for i = 8, key = 800 record pid = 8, record sid = 8.
+
+test(): Cursor at pageId = 10, eid = 0 
+BTreeIndex::readForward() - current pid = 10, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 900, rid.pid = 9, rid.sid = 9
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 10, cursor.eid = 1
+test() readForward for i = 9, key = 900 record pid = 9, record sid = 9.
+
+test(): Cursor at pageId = 10, eid = 1 
+BTreeIndex::readForward() - current pid = 10, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 1000, rid.pid = 10, rid.sid = 10
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 10, cursor.eid = 2
+test() readForward for i = 10, key = 1000 record pid = 10, record sid = 10.
+
+test(): Cursor at pageId = 10, eid = 2 
+BTreeIndex::readForward() - current pid = 10, eid = 2
+BTreeIndex::readForward() - the entry read at current node: key = 1100, rid.pid = 11, rid.sid = 11
+BTreeIndex::readForward() - getKeyCount() = 3, eid points to next node and now cursor.pid = 6, cursor.eid = 0
+test() readForward for i = 11, key = 1100 record pid = 11, record sid = 11.
+
+test(): Cursor at pageId = 6, eid = 0 
+BTreeIndex::readForward() - current pid = 6, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 1200, rid.pid = 12, rid.sid = 12
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 6, cursor.eid = 1
+test() readForward for i = 12, key = 1200 record pid = 12, record sid = 12.
+
+test(): Cursor at pageId = 6, eid = 1 
+BTreeIndex::readForward() - current pid = 6, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 1300, rid.pid = 13, rid.sid = 13
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 6, cursor.eid = 2
+test() readForward for i = 13, key = 1300 record pid = 13, record sid = 13.
+
+test(): Cursor at pageId = 6, eid = 2 
+BTreeIndex::readForward() - current pid = 6, eid = 2
+BTreeIndex::readForward() - the entry read at current node: key = 1400, rid.pid = 14, rid.sid = 14
+BTreeIndex::readForward() - getKeyCount() = 3, eid points to next node and now cursor.pid = 9, cursor.eid = 0
+test() readForward for i = 14, key = 1400 record pid = 14, record sid = 14.
+
+test(): Cursor at pageId = 9, eid = 0 
+BTreeIndex::readForward() - current pid = 9, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 1500, rid.pid = 15, rid.sid = 15
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 9, cursor.eid = 1
+test() readForward for i = 15, key = 1500 record pid = 15, record sid = 15.
+
+test(): Cursor at pageId = 9, eid = 1 
+BTreeIndex::readForward() - current pid = 9, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 1600, rid.pid = 16, rid.sid = 16
+BTreeIndex::readForward() - getKeyCount() = 2, eid points to next node and now cursor.pid = 13, cursor.eid = 0
+test() readForward for i = 16, key = 1600 record pid = 16, record sid = 16.
+
+test(): Cursor at pageId = 13, eid = 0 
+BTreeIndex::readForward() - current pid = 13, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 1700, rid.pid = 17, rid.sid = 17
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 13, cursor.eid = 1
+test() readForward for i = 17, key = 1700 record pid = 17, record sid = 17.
+
+test(): Cursor at pageId = 13, eid = 1 
+BTreeIndex::readForward() - current pid = 13, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 1800, rid.pid = 18, rid.sid = 18
+BTreeIndex::readForward() - getKeyCount() = 2, eid points to next node and now cursor.pid = 11, cursor.eid = 0
+test() readForward for i = 18, key = 1800 record pid = 18, record sid = 18.
+
+test(): Cursor at pageId = 11, eid = 0 
+BTreeIndex::readForward() - current pid = 11, eid = 0
+BTreeIndex::readForward() - the entry read at current node: key = 1900, rid.pid = 19, rid.sid = 19
+BTreeIndex::readForward() - no overflow issue, now cursor.pid = 11, cursor.eid = 1
+test() readForward for i = 19, key = 1900 record pid = 19, record sid = 19.
+
+test(): Cursor at pageId = 11, eid = 1 
+BTreeIndex::readForward() - current pid = 11, eid = 1
+BTreeIndex::readForward() - the entry read at current node: key = 2000, rid.pid = 20, rid.sid = 20
+BTreeIndex::readForward() - getKeyCount() = 2, eid points to next node and now cursor.pid = 14, cursor.eid = 0
+test() readForward for i = 20, key = 2000 record pid = 20, record sid = 20.
+
+BTreeIndex::BTreeInfo - rootPid: 8
+BTreeIndex::BTreeInfo - treeHeight: 3
+BTreeIndex::close() - written back the rootPid and treeHeight

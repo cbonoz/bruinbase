@@ -18,7 +18,9 @@
 #include <assert.h>
 #include <vector>
 
- using namespace std;
+#define DEBUG 0
+
+using namespace std;
              
 /**
  * The data structure to point to a particular entry at a b+tree leaf node.
