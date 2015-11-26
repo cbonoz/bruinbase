@@ -50,6 +50,7 @@ class SqlEngine {
    * @return error code. 0 if no error
    */
   static RC select(int attr, const std::string& table, const std::vector<SelCond>& conds);
+  static RC selectOnIndex(int attr, const std::string& table, BTreeIndex& btree, const std::vector<SelCond>& conds);
 
   /**
    * load a table from a load file.

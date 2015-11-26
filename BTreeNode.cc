@@ -314,7 +314,7 @@ int BTNonLeafNode::getKeyCount()
 	int curPid;
 	int i = 0;
 
-	while(kstart <= end) {
+	while (kstart <= end) {
 		curPid = *((int *) kstart);
 
 		if (curPid == NONE && (*((int *) (kstart - PID_SIZE)) == NONE)) {
@@ -327,7 +327,7 @@ int BTNonLeafNode::getKeyCount()
 		i++;
 	}
 
-	return (i > N_KEY) ? (i-1) : i;
+	return (i > N_KEY) ? (i - 1) : i;
 }
 
 /*
@@ -341,6 +341,8 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 	int pos;
 	// find key location
 	BTNonLeafNode::locate(key, pos);
+	// printf("BTNonLeafNode::insert() - located pos = %d\n", pos);
+	// printf("BTNonLeafNode::insert() - CHECKPOINT getKeyCount = %d keys\n", getKeyCount());
 	// printf("located key pos = %d\n", pos);
 	// find copy location
 	char *loc = buffer + PID_SIZE + pos * NL_OFFSET;
@@ -370,8 +372,7 @@ RC BTNonLeafNode::insert(int key, PageId pid)
 RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, int& midKey)
 {
 	insert(key, pid);
-	// mid_key is the position to split
-	int mid_key = (N_KEY + 1) / 2;
+	int mid_key = (N_KEY + 1) / 2;	// mid_key is the position to split
 	char *loc = buffer + PID_SIZE + (mid_key * NL_OFFSET);
 	memcpy(&midKey, loc, K_SIZE);
 	char *sib_start = loc + K_SIZE;

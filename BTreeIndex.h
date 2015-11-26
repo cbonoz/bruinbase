@@ -15,6 +15,8 @@
 #include "RecordFile.h"
 #include "BTreeNode.h"
 
+#include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include <vector>
 
@@ -56,7 +58,10 @@ class BTreeIndex {
    */
   RC close();
 
-
+  /*
+   * BTreeIndex helper function, inserts a key into Btree
+   * using <key = 100i, recordID = [pid = i, sid = i]>
+   */
   RC insertKey(int seq);
     
   /**
@@ -104,6 +109,10 @@ class BTreeIndex {
    */
   RC readForward(IndexCursor& cursor, int& key, RecordId& rid);
   
+  /*
+   * BTreeIndex helper function, prints out BTree info
+   * rootPid and treeHeight
+   */
   RC BTreeInfo();
 
  private:

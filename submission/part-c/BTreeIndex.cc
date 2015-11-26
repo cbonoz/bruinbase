@@ -12,6 +12,7 @@
 
 using namespace std;
 
+#define DEBUG 0
 /*
  * BTreeIndex constructor
  */

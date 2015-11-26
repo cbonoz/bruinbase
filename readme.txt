@@ -5,8 +5,20 @@ Zengwen Yuan
 604593014
 
 
+Part C:
+---
 
+Comments:
 
+This part added on an Index to our existing database structure.
+
+To test the BTreeIndex.cc implementation, we expended our test cases to load the index file and monitor how the index was constructed on the disk (Pagefile). Overflow and parent Splitting were challenging components to create precisely; the test cases revealed a few off-by-one errors in our original BTreeNode implementation of insertAndSplit which we were able to fix.
+
+Another difficult component was figuring out the correct way to track the path of parent nodes when the B tree was traversed to find a particular leaf pointer. To accomplish the tracking, we use a dynamically resizable array (vector) to store the pids of the nodes we visit when we locate a particular entry in the table.
+
+We noticed that rootPid and treeHeight are key index variables that are needed to reconstruct the index should the index file be closed and reopened again. We had the idea of appending these values to every page of the pagefile; however, we decided to create a specifical Index/Tree information page for each Index on the disk that would not store any other tree data. This gives us the advantage of scalability in that these values don't need to be repetitively stored for each page, and the data page can easily be extended to hold more configuration settings for the index if needed. For small data sets, this may not be as much of an advantage as it requires a fresh page to store the values.
+
+We started on the implementation of Part D (loading the index), and will use this index to achieve faster range select queries on the underlying dataset.
 
 
 Part B:

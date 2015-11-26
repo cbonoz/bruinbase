@@ -13,6 +13,14 @@
 #include "Bruinbase.h"
 #include "PageFile.h"
 #include "RecordFile.h"
+#include "BTreeNode.h"
+
+#include <assert.h>
+#include <vector>
+
+#define DEBUG 0
+
+using namespace std;
              
 /**
  * The data structure to point to a particular entry at a b+tree leaf node.
@@ -49,6 +57,9 @@ class BTreeIndex {
    * @return error code. 0 if no error
    */
   RC close();
+
+
+  RC insertKey(int seq);
     
   /**
    * Insert (key, RecordId) pair to the index.
@@ -57,6 +68,12 @@ class BTreeIndex {
    * @return error code. 0 if no error
    */
   RC insert(int key, const RecordId& rid);
+
+  /**
+   * insertHelper used for recursive calls
+   * if nested overflows upon inserting the new <key, rid> pair
+   */
+  RC insertInParent(vector<PageId> &path, int siblingKey);
 
   /**
    * Run the standard B+Tree key search algorithm and identify the
@@ -74,9 +91,10 @@ class BTreeIndex {
    * @param cursor[OUT] the cursor pointing to the index entry with 
    *                    searchKey or immediately behind the largest key 
    *                    smaller than searchKey.
+   * @param isTracking[IN] store the path of PageIds
    * @return 0 if searchKey is found. Othewise, an error code
    */
-  RC locate(int searchKey, IndexCursor& cursor);
+  RC locate(int searchKey, IndexCursor& cursor, bool isTracking = false);
 
   /**
    * Read the (key, rid) pair at the location specified by the index cursor,
@@ -88,8 +106,11 @@ class BTreeIndex {
    */
   RC readForward(IndexCursor& cursor, int& key, RecordId& rid);
   
+  RC BTreeInfo();
+
  private:
   PageFile pf;         /// the PageFile used to store the actual b+tree in disk
+  vector<PageId> path; /// the vector to store the path (pids) to the leaf node
 
   PageId   rootPid;    /// the PageId of the root node
   int      treeHeight; /// the height of the tree

@@ -9,6 +9,7 @@
  
 #include "BTreeIndex.h"
 #include "BTreeNode.h"
+#define DEBUG 0
 
 using namespace std;
 
@@ -24,6 +25,10 @@ BTreeIndex::BTreeIndex()
     // should we init vector<PageId> path here too?
 }
 
+/*
+ * BTreeIndex helper function, inserts a key into Btree
+ * using <key = 100i, recordID = [pid = i, sid = i]>
+ */
 RC BTreeIndex::insertKey(int seq) {
     RC ret = 0;
     IndexCursor cursor;
@@ -54,7 +59,6 @@ RC BTreeIndex::open(const string& indexname, char mode)
         memset(buffer, 0, P_SIZE);
 
         PageId indexEndPid = pf.endPid();
-        // if (DEBUG) printf("BTreeIndex::open() - endPid for pf is %d\n", indexEndPid);
         if (indexEndPid == 0) { // pagefile is empty, set members to empty (initial) values
             rootPid = -1;
             treeHeight = 0;
@@ -62,16 +66,13 @@ RC BTreeIndex::open(const string& indexname, char mode)
             memcpy((buffer + PID_SIZE), &treeHeight, sizeof(int));
 
             ret = pf.write(0, buffer);
-            // if (DEBUG) printf("BTreeIndex::open() - empty pagefile, written back the rootPid = %d and treeHeight = %d\n", rootPid, treeHeight);
             if (ret != 0) {
                 free(buffer);
                 return ret; // RC_FILE_WRITE_FAILED;
             }
         } else { // page file is not empty, we read first page of the index file
-            // ret = pf.read(indexEndPid - 1, buffer); // should read the first page
             ret = pf.read(0, buffer);   // read the first page to get rootPid and treeHeight
             
-            // if (DEBUG) printf("BTreeIndex::open() - pagefile not empty, we read it into buffer\n");
             if (ret != 0) {
                 free(buffer);
                 return ret; // RC_FILE_READ_FAILED;
@@ -83,9 +84,7 @@ RC BTreeIndex::open(const string& indexname, char mode)
             // treeHeight at offset position PID_SIZE
             memcpy(&rootPid, buffer, PID_SIZE);
             memcpy(&treeHeight, buffer + PID_SIZE, sizeof(int));
-            // if (DEBUG) printf("BTreeIndex::open() - pagefile not empty, got rootPid = %d, treeheight = %d\n", rootPid, treeHeight);
-            // rootPid = rootPid >= 0 ? rootPid : -1;
-            // treeHeight = treeHeight > 0 ? treeHeight : 0;
+            
         }
 
         free(buffer);
@@ -113,7 +112,6 @@ RC BTreeIndex::close()
 
     // write the buffer to first page in the pagefile
     ret = pf.write(0, buffer);
-    if (DEBUG) printf("BTreeIndex::close() - written back the rootPid and treeHeight\n");
     if (ret != 0) {
         free(buffer);
         return RC_FILE_WRITE_FAILED;
@@ -126,187 +124,137 @@ RC BTreeIndex::close()
         return RC_FILE_CLOSE_FAILED;
     }
 
-    if (DEBUG) printf("BTreeIndex::close() - pagefile closed\n");
     free(buffer);
     return ret;
 }
 
 RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
     RC ret = 0;
-    int insertAtLevel = 1;
+    // int insertAtLevel = 1;
 
     // get pid of the splitted sibling node
     PageId siblingPid = path.back(); 
     path.pop_back();
-    if (DEBUG) printf("BTreeIndex::insertInParent() - insert siblingPid = %d\n", siblingPid);
-
+    
     // get pid of the current node
     PageId currentPid = path.back(); 
     path.pop_back();
-    if (DEBUG) printf("BTreeIndex::insertInParent() - currentPid = %d\n", currentPid);
+    
+    // get pid of the parent node of the current node
+    PageId parentPid = path.back(); 
+    path.pop_back();
+    
+    if (parentPid > 0 && parentPid != rootPid) { // current node is not a root node, it has a parent
 
-    if (currentPid == rootPid) { // if current node is already the root node
-        if (DEBUG) printf("BTreeIndex::insertInParent() - current node is already the root node\n");
-        bool isFull = false;
-        if (treeHeight == 1) {
-            // // current node is a leaf node, so we want to create a
-            // // new root node (a nonleaf node) and initialize it
-            // isFull = true;
-            // BTLeafNode newSiblingNode;
-            // PageId newSiblingPid = pf.endPid();
-            // int newSiblingKey;
-                
-            BTNonLeafNode newRootNode;
-            newRootNode.initializeRoot(currentPid, siblingKey, siblingPid);
-            PageId newRootPid = pf.endPid();
-            ret = newRootNode.write(newRootPid, pf);
+        // else, recursively insert into current node's parent
+        BTNonLeafNode parentNode;
+        ret = parentNode.read(parentPid, pf);
+        if (ret != 0) {
+            return ret; // RC_FILE_READ_FAILED;
+        }
+        
+        if (parentNode.getKeyCount() < N_KEY) { // if there is space in the parent node
+            parentNode.insert(siblingKey, siblingPid);
+            ret = parentNode.write(parentPid, pf);
+            if (ret != 0) {
+                return ret; // RC_FILE_WRITE_FAILED;
+            }    
+        } else { // no space in the parent node -- split
+            PageId newSiblingPid = pf.endPid();
+            BTNonLeafNode newSiblingNode;
+            int newSiblingKey;
+
+            // no space in the parent node
+            parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey);
+            
+            ret = newSiblingNode.write(newSiblingPid, pf);
             if (ret != 0) {
                 return ret; // RC_FILE_WRITE_FAILED;
             }
-            rootPid = newRootPid;
-            treeHeight++;
-            insertAtLevel++;
-
-            if (DEBUG) printf("BTreeIndex::insertInParent() - current leaf root node is a leaf node, create a new root node now\n");
-            return ret;
-        } else {
-            BTNonLeafNode currentNode;  // otherwise, current root node must be a nonleaf node
-            currentNode.read(currentPid, pf);
-            if (currentNode.getKeyCount() >= N_KEY) {
-                isFull = true;
-                if (DEBUG) printf("BTreeIndex::insertInParent() - current key # is %d\n", currentNode.getKeyCount());
-                if (DEBUG) printf("BTreeIndex::insertInParent() - current nonleaf root node is full, create a new root node now\n");
-            } else {
-                if (DEBUG) printf("BTreeIndex::insertInParent() - current key # is %d\n", currentNode.getKeyCount());
-                if (DEBUG) printf("BTreeIndex::insertInParent() - current nonleaf root node is NOT full, insert safely\n");
-                currentNode.insert(siblingKey, siblingPid);
-                ret = currentNode.write(currentPid, pf);
-                if (ret != 0) {
-                    return ret; // RC_FILE_WRITE_FAILED;
-                }
+            ret = parentNode.write(parentPid, pf);
+            if (ret != 0) {
+                return ret; // RC_FILE_WRITE_FAILED;
             }
-        }
 
-        if (isFull) {
-            if (DEBUG) printf("BTreeIndex::insertInParent() - isFull: current root node is full, create a new root\n");
-            BTNonLeafNode rootNode;
-            rootNode.initializeRoot(currentPid, siblingKey, siblingPid);
+            // push currentNode pid in the vector
+            path.push_back(parentPid);
+            // push new sibling node pid in the vector
+            path.push_back(newSiblingPid);
+            ret = insertInParent(path, newSiblingKey);
+        }
+    } else if (parentPid > 0 && parentPid == rootPid) {
+        // else, insert into current node's parent, which is a root node
+        
+        BTNonLeafNode parentNode;
+        ret = parentNode.read(parentPid, pf);
+        if (ret != 0) {
+            return ret; // RC_FILE_READ_FAILED;
+        }
+        
+        if (parentNode.getKeyCount() < N_KEY) { // if there is space in the parent node
+            parentNode.insert(siblingKey, siblingPid);
+            ret = parentNode.write(parentPid, pf);
+            if (ret != 0) {
+                return ret; // RC_FILE_WRITE_FAILED;
+            }
+        } else { // no space in the parent node -- split
+            PageId newSiblingPid = pf.endPid();
+            BTNonLeafNode newSiblingNode;
+            int newSiblingKey;
+
+            // no space in the parent node
+            parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey);
+
+            ret = newSiblingNode.write(newSiblingPid, pf);
+            if (ret != 0) {
+                return ret; // RC_FILE_WRITE_FAILED;
+            }
+            ret = parentNode.write(parentPid, pf);
+            if (ret != 0) {
+                return ret; // RC_FILE_WRITE_FAILED;
+            }
+
             PageId newRootPid = pf.endPid();
-            
-            insertAtLevel++;
+            BTNonLeafNode rootNode;
+            rootNode.initializeRoot(parentPid, newSiblingKey, newSiblingPid);
 
             ret = rootNode.write(newRootPid, pf);
             if (ret != 0) {
                 return ret; // RC_FILE_WRITE_FAILED;
             }
 
-            if (DEBUG) printf("BTreeIndex::insertInParent() - the new root node is:\n");
-            rootNode.printKeys();
+            // update the root node info
+            rootPid = newRootPid;
+            treeHeight++;
+        }
+
+    } else if (currentPid == rootPid) { // if current node is already the root node
+        
+        BTNonLeafNode currentNode;  // current root node must be a nonleaf node now
+        currentNode.read(currentPid, pf);
+
+        if (currentNode.getKeyCount() >= N_KEY) {
+            PageId newRootPid = pf.endPid();
+            BTNonLeafNode rootNode;
+            rootNode.initializeRoot(currentPid, siblingKey, siblingPid);
+            
+            ret = rootNode.write(newRootPid, pf);
+            if (ret != 0) {
+                return ret; // RC_FILE_WRITE_FAILED;
+            }
 
             // update the root node info
             rootPid = newRootPid;
             treeHeight++;
-            if (DEBUG) printf("BTreeIndex::insertInParent() - the new rootPid = %d, treeHeight = %d:\n", newRootPid, treeHeight);
-
-            return ret;
-        }
-
-        return ret;
-    }
-
-    // else, insert into current node's parent
-    if (DEBUG) printf("BTreeIndex::insert() - else, insert into current node's parent\n");
-    // get pid of the parent node of the current node
-    PageId parentPid = path.back(); 
-    path.pop_back();
-    if (DEBUG) printf("BTreeIndex::insertInParent() - parentPid = %d\n", parentPid);
-
-    BTNonLeafNode parentNode;
-    ret = parentNode.read(parentPid, pf);
-    if (ret != 0) {
-        return ret; // RC_FILE_READ_FAILED;
-    }
-
-    if (DEBUG) printf("BTreeIndex::insertInParent() - the parent node is:\n");
-    parentNode.printKeys();
-
-    if (parentNode.getKeyCount() < N_KEY) { // if there is space in the parent node
-        if (DEBUG) printf("BTreeIndex::insertInParent() - current parent has %d keys\n", parentNode.getKeyCount());
-        parentNode.insert(siblingKey, siblingPid);
-        ret = parentNode.write(parentPid, pf);
-        if (ret != 0) {
-            return ret; // RC_FILE_WRITE_FAILED;
-        }
-        if (DEBUG) printf("BTreeIndex::insertInParent() - not full, after insert, the parent node is:\n");
-        if (DEBUG) printf("BTreeIndex::insertInParent() - current parent has %d keys\n", parentNode.getKeyCount());
-        parentNode.printKeys();
-    } else { // no space in the parent node -- split
-        PageId newSiblingPid = pf.endPid();
-        BTNonLeafNode newSiblingNode;
-        int newSiblingKey;
-
-        insertAtLevel++;
-        if (DEBUG) printf("BTreeIndex::insertInParent() - no space, should split - current parent has %d keys\n", parentNode.getKeyCount());
-
-        if (DEBUG) printf("BTreeIndex::insertInParent() - in the trouble, the siblingKey = %d\n", siblingKey);
-        if (DEBUG) printf("BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = %d\n", newSiblingPid);
-        if (DEBUG) printf("BTreeIndex::insertInParent() - in the trouble, the currentPid = %d\n", parentPid);
-
-        // no space in the parent node
-        parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey);
-        if (DEBUG) printf("BTreeIndex::insertInParent() - executed insertAndSplit\n");
-
-        ret = newSiblingNode.write(newSiblingPid, pf);
-        if (ret != 0) {
-            return ret; // RC_FILE_WRITE_FAILED;
-        }
-        ret = parentNode.write(parentPid, pf);
-        if (ret != 0) {
-            return ret; // RC_FILE_WRITE_FAILED;
-        }
-
-        if (DEBUG) printf("BTreeIndex::insertInParent() - node full, after insert, the parent node is:\n");
-        parentNode.printKeys();
-        if (DEBUG) printf("BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:\n");
-        newSiblingNode.printKeys();
-
-        if (treeHeight == insertAtLevel) {
-            if (DEBUG) printf("BTreeIndex::insertInParent() - hey! you increased the level\n");
-            // get pid of the parent node of the current node
-            BTNonLeafNode newGrandRootNode;
-            newGrandRootNode.initializeRoot(parentPid, newSiblingKey, newSiblingPid);
-            PageId newGrandRootPid = pf.endPid();
-            ret = newGrandRootNode.write(newGrandRootPid, pf);
+        } else {
+            currentNode.insert(siblingKey, siblingPid);
+            ret = currentNode.write(currentPid, pf);
             if (ret != 0) {
                 return ret; // RC_FILE_WRITE_FAILED;
             }
-            // push newGrandRootNode pid in the vector
-            path.push_back(newGrandRootPid);
-            // push currentNode pid in the vector
-            path.push_back(parentPid);
-            // push new sibling node pid in the vector
-            path.push_back(newSiblingPid);
-            if (DEBUG) printf("BTreeIndex::insertInParent() - pushed grandRootPid, parentPid and newSiblingPid into the path\n");
-            if (DEBUG) printf("BTreeIndex::insertInParent() - grandParentPid = %d\n", newGrandRootPid);
-
-
-        if (DEBUG) printf("BTreeIndex::insertInParent() - newGrandRootNode is:\n");
-        newGrandRootNode.printKeys();
-
-            // update the root node info
-            rootPid = newGrandRootPid;
-            treeHeight++;
-            if (DEBUG) printf("\n~~~~~~~BTreeIndex::insertInParent() - NOW treeHeight is %d\n", treeHeight);
-            if (DEBUG) printf("BTreeIndex::insertInParent() - the new rootPid = %d, treeHeight = %d:\n", newGrandRootPid, treeHeight);
-            return ret;
-        } else {
-            // push currentNode pid in the vector
-            path.push_back(parentPid);
-            // push new sibling node pid in the vector
-            path.push_back(newSiblingPid);
-            if (DEBUG) printf("BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path\n");
-            ret = insertInParent(path, newSiblingKey);
         }
+
+        return ret;
     }
 
     return ret;
@@ -323,21 +271,17 @@ RC BTreeIndex::insert(int key, const RecordId& rid) // following the book algori
     RC ret = 0;
     // clear the existing path chain
     path.erase(path.begin(), path.end());
-    if (DEBUG) printf("BTreeIndex::insert() - path initialized\n");
-
+    
     // if (tree is empty)
     // create an empty leaf node, which is also the root
     if (treeHeight == 0) {
-        if (DEBUG) printf("BTreeIndex::insert() - empty tree\n");
         BTLeafNode root;
         ret = root.insert(key, rid);
-        if (DEBUG) printf("BTreeIndex::insert() - insert into root node\n");
         if (ret != 0) {
             return ret;
         }
 
         rootPid = pf.endPid();
-        if (DEBUG) printf("BTreeIndex::insert() - pf.endPid() = %d\n", rootPid);
         // make sure minimal rootPid value is 1 since tree now initialized
         rootPid = rootPid > 0 ? rootPid : 1;
         treeHeight++;
@@ -347,10 +291,6 @@ RC BTreeIndex::insert(int key, const RecordId& rid) // following the book algori
             return ret;
         }
 
-        if (DEBUG) printf("BTreeIndex::insert() - root node written back to pf where rootPid = %d\n", rootPid);
-
-        if (DEBUG) printf("BTreeIndex::insert() - and now the root node is:\n");
-        root.printKeys();
         return ret;
     }
 
@@ -358,21 +298,13 @@ RC BTreeIndex::insert(int key, const RecordId& rid) // following the book algori
     locate(key, targetIdx, true);
 
     PageId targetPid = targetIdx.pid;
-    if (DEBUG) printf("BTreeIndex::insert() - located target pid = %d\n", targetPid);
     BTLeafNode targetLeafNode;
-    if (DEBUG) printf("BTreeIndex::insert() - target leaf node just created (should be empty):\n");
-    targetLeafNode.printKeys();
     targetLeafNode.read(targetPid, pf);
-    if (DEBUG) printf("BTreeIndex::insert() - target leaf node read:\n");
-    targetLeafNode.printKeys();
-
+    
     // check if targetLeafNode is full of keys
     if (targetLeafNode.getKeyCount() < N_KEY) { // targetLeafNode is not full - insert
         targetLeafNode.insert(key, rid);
-        if (DEBUG) printf("BTreeIndex::insert() - targetLeafNode is not full, insert\n");
 
-        if (DEBUG) printf("BTreeIndex::insert() - now after insert, the target leaf node is:\n");
-        targetLeafNode.printKeys();
         ret = targetLeafNode.write(targetPid, pf); // write back the target leaf node!!
         if (ret != 0) {
             return ret; // RC_FILE_WRITE_FAILED;
@@ -382,27 +314,18 @@ RC BTreeIndex::insert(int key, const RecordId& rid) // following the book algori
         PageId siblingPid = pf.endPid();
         BTLeafNode siblingLeafNode;
         int siblingKey;
-        if (DEBUG) printf("BTreeIndex::insert() - no space, sibling pid = %d and it is empty now\n", siblingPid);
-    
+        
         // push targetLeafNode pid
         path.push_back(targetPid);
         // push sibling node pid
         path.push_back(siblingPid);
 
-        if (DEBUG) printf("BTreeIndex::insert() - pushed targetPid and siblingPid into the path\n");
-
         // targetLeafNode is full - insert and split
         targetLeafNode.insertAndSplit(key, rid, siblingLeafNode, siblingKey);
-
-        if (DEBUG) printf("BTreeIndex::insert() - after split, target leaf node is:\n");
-        targetLeafNode.printKeys();
-        if (DEBUG) printf("BTreeIndex::insert() - after split, sibling leaf node is:\n");
-        siblingLeafNode.printKeys();
 
         siblingLeafNode.setNextNodePtr(targetLeafNode.getNextNodePtr());
         targetLeafNode.setNextNodePtr(siblingPid);
 
-        if (DEBUG) printf("BTreeIndex::insert() - now insert and split, get siblingKey = %d\n", siblingKey);
         ret = siblingLeafNode.write(siblingPid, pf);
         if (ret != 0) {
             return ret; // RC_FILE_WRITE_FAILED;
@@ -412,9 +335,23 @@ RC BTreeIndex::insert(int key, const RecordId& rid) // following the book algori
             return ret; // RC_FILE_WRITE_FAILED;
         }
 
-        if (DEBUG) printf("BTreeIndex::insert() - after split, next ptr of target leafnode is %d\n", targetLeafNode.getNextNodePtr());
-        if (DEBUG) printf("BTreeIndex::insert() - now insert siblingKey = %d into its parent\n", siblingKey);
-        ret = insertInParent(path, siblingKey);
+        if (treeHeight == 1) { // if current leafnode is also the root node, we need to create a new root node, and increment the tree height
+            PageId newRootPid = pf.endPid();
+            BTNonLeafNode newRootNode;
+            newRootNode.initializeRoot(targetPid, siblingKey, siblingPid);
+
+            // push new root node pid?
+            // path.push_back(rootNewPid);
+
+            ret = newRootNode.write(newRootPid, pf);
+            if (ret != 0) {
+                return ret; // RC_FILE_WRITE_FAILED;
+            }
+            rootPid = newRootPid;
+            treeHeight++;
+        } else { // current leafnode is not the root node, we need to insert into its parent
+            ret = insertInParent(path, siblingKey);
+        }
     }
 
     return ret;
@@ -443,33 +380,21 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor, bool isTracking)
     RC ret = 0;
     // clear the existing path chain
     path.erase(path.begin(), path.end());
-    if (DEBUG) printf("BTreeIndex::locate() - path initialized\n");
     // we read the node at the page id 'pid' in the pagefile into a leaf or nonleaf node
 
     int currentLevel = 1;
     assert(treeHeight >= 0);
 
-    if (DEBUG) printf("BTreeIndex::locate() - treeHeight = %d\n", treeHeight);
-    // this one can be wrong if for the second index file, pid > 0!!
-    // assert(rootPid > 0);
-    
-    // BTNonLeafNode
-    // BTLeafNode
-    // !!!### PROBLEM?
     PageId currentPid = rootPid;
     BTNonLeafNode currentNonLeafNode;
     
     while (currentLevel < treeHeight) {
         // we are not at the leaf level yet
         ret = currentNonLeafNode.read(currentPid, pf);
-        if (DEBUG) printf("BTreeIndex::locate() - current level = %d, non-leaf node read:\n", currentLevel);
-        currentNonLeafNode.printKeys();
         if (isTracking) {
             path.push_back(currentPid);
-            if (DEBUG) printf("BTreeIndex::locate() - we are tracking, current pid = %d\n", currentPid);
         }
         ret = currentNonLeafNode.locateChildPtr(searchKey, currentPid);
-        if (DEBUG) printf("BTreeIndex::locate() - located child ptr pid = %d\n", currentPid);
         if (ret != 0) {
             return ret; // RC_NO_SUCH_RECORD;
         }
@@ -478,15 +403,12 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor, bool isTracking)
 
     BTLeafNode currentNode;
     ret = currentNode.read(currentPid, pf);
-    if (DEBUG) printf("BTreeIndex::locate() - reached leaf level, leaf pid = %d, and it is:\n", currentPid);
-    currentNode.printKeys();
     if (ret != 0) {
         return ret; // RC_FILE_READ_FAILED;
     }
 
     cursor.pid = currentPid;
     ret = currentNode.locate(searchKey, cursor.eid);
-    if (DEBUG) printf("BTreeIndex::locate() - we are tracking, leaf eid = %d\n", cursor.eid);
     if (ret != 0) {
         return ret; // RC_NO_SUCH_RECORD;
     }
@@ -508,8 +430,7 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid)
 
     PageId currentPid = cursor.pid;
     int currentEid = cursor.eid;
-    if (DEBUG) printf("BTreeIndex::readForward() - current pid = %d, eid = %d\n", currentPid, currentEid);
-
+    
     BTLeafNode currentNode;
     ret = currentNode.read(cursor.pid, pf);
     if (ret != 0) {
@@ -520,23 +441,23 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid)
     if (ret != 0) {
         return ret; // RC_INVALID_CURSOR;
     }
-    if (DEBUG) printf("BTreeIndex::readForward() - the entry read at current node: key = %d, rid.pid = %d, rid.sid = %d\n", key, rid.pid, rid.sid);
 
     // update eid, but check whether it will overflow first
     if (currentEid == currentNode.getKeyCount() - 1) { // eid points to next node
         cursor.eid = 0;
         cursor.pid = currentNode.getNextNodePtr();
-        if (DEBUG) printf("BTreeIndex::readForward() - getKeyCount() = %d, eid points to next node and now cursor.pid = %d, cursor.eid = %d\n", currentNode.getKeyCount(), cursor.pid, cursor.eid);
-
     } else { // no overflow issue
         cursor.eid = ++currentEid;
         cursor.pid = currentPid;
-        if (DEBUG) printf("BTreeIndex::readForward() - no overflow issue, now cursor.pid = %d, cursor.eid = %d\n", cursor.pid, cursor.eid);
     }
 
     return ret;
 }
 
+/*
+ * BTreeIndex helper function, prints out BTree info
+ * rootPid and treeHeight
+ */
 RC BTreeIndex::BTreeInfo() {
     printf("BTreeIndex::BTreeInfo - rootPid: %d\n", rootPid);
     printf("BTreeIndex::BTreeInfo - treeHeight: %d\n", treeHeight);

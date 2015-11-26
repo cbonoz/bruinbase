@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // #define RID_SIZE sizeof(RecordId)
 // #define K_SIZE sizeof(int)
