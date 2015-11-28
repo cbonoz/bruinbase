@@ -1,13 +1,19 @@
-Bruinbase> Bruinbase> 8
+rm -f bruinbase bruinbase.exe *.o *~ lex.sql.c SqlParser.tab.c SqlParser.tab.h 
+bison -d -psql SqlParser.y
+flex -Psql SqlParser.l
+g++ -ggdb -o bruinbase main.cc SqlParser.tab.c lex.sql.c SqlEngine.cc BTreeIndex.cc BTreeNode.cc RecordFile.cc PageFile.cc 
+[H[2JBruinbase> Bruinbase> 8
 Bruinbase> 272 'Baby Take a Bow'
 1578 'G.I. Blues'
 2244 'King Creole'
+2342 'Last Ride, The'
 Bruinbase> Bruinbase> Bruinbase> 50
 Bruinbase> 173 'Angel Levine, The'
 175 'Angel Unchained'
 272 'Baby Take a Bow'
 303 'Bananas'
 395 'Big Jake'
+489 'Blue Hawaii'
 Bruinbase> Bruinbase> Bruinbase> 100
 Bruinbase> 489 'Blue Hawaii'
 Bruinbase> Bruinbase> Bruinbase> 997
@@ -135,4 +141,5 @@ Bruinbase> 400 'Big One, The'
 491 'Blue Moon'
 492 'Blue Ridge Fall'
 493 'Blues Brothers 2000'
+496 'Bobby G. Cant Swim'
 Bruinbase> Bruinbase> 

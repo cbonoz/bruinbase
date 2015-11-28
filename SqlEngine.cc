@@ -311,14 +311,19 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
   string index_file = table + ".idx";
   rc = btree.open((index_file).c_str(), 'r');
 
-  // if index file successfully opens - use index select method
+  // if index file exists - use index select method
   if (rc == 0) { 
     rc = selectOnIndex(attr, table, btree, cond);
     return rc;
   }
-
+  printf("\nselecting without idx\n");
   // otherwise, we have to search without index
   // scan the table file from the beginning
+  if ((rc = rf.open(table + ".tbl", 'r')) < 0) {
+    fprintf(stderr, "Error: table %s does not exist\n", table.c_str());
+    return rc;
+  }
+
   rid.pid = rid.sid = 0;
   count = 0;
   
