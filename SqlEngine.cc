@@ -16,6 +16,8 @@
 #include "Bruinbase.h"
 #include "SqlEngine.h"
 
+#define DEBUG 0
+
 using namespace std;
 
 // external functions and variables for load file and sql command parsing 
@@ -38,34 +40,34 @@ RC SqlEngine::run(FILE* commandline)
 RC SqlEngine::selectOnIndex(int attr, const std::string& table, BTreeIndex &btree, const vector<SelCond>& cond) {
   //  { EQ, NE, LT, GT, LE, GE }
   
-  //general (for rf reading)
-  IndexCursor cursor; // index cursor for locating tuples 
+  // general (for rf reading)
+  IndexCursor cursor;     // index cursor for locating tuples (starting point)
   IndexCursor end_cursor; // index cursor for last tuple (in range)
-  RecordFile rf;   // RecordFile containing the table
-  RecordId rid;
-  rid.pid=0;
-  rid.sid=0;
-
+  RecordFile rf;          // RecordFile containing the table
+  RecordId rid;           // RecordId
   string value;
   int key;
-  int rc=0;
-  //rid.pid=0;//page of record
-  //rid.sid=0;//slot of record
-  
-  //key condition variables
-  int key_min=INT_MIN, key_max=INT_MAX, key_exact=0;
-  bool EQ_active=false,NEQ_active=false;
-  vector<int> key_neq_vals;
-  
 
-  //value condition variables (only EQ and NEQ apply)
-  bool val_NEQ_active=false, val_EQ_active=false;
+  int rc = 0;
+  rid.pid = 0; // page of record
+  rid.sid = 0; // slot of record
+  
+  // key condition variables
+  int key_min = INT_MIN;  // if key can be a negative value
+  int key_max = INT_MAX;
+  int key_exact = 0;      // key value used for (non)equality
+  bool EQ_active = false; // Equality indicator
+  bool NEQ_active = false;// Non-Equality indicator
+  vector<int> key_neq_vals; // we want to store all the neq values
+  
+  // value condition variables (only EQ and NEQ apply)
+  string val_exact = "";
+  bool val_cond = false;
+  bool val_NEQ_active = false;
+  bool val_EQ_active = false;
   vector<string> val_neq_vals;
-  string val_exact="";
-  bool val_cond=false;
 
-
-  //indicates whether non-null value could be returned from query
+  // indicates whether non-null value could be returned from query
   bool logic_error = false;
 
   // open the table file
@@ -74,113 +76,125 @@ RC SqlEngine::selectOnIndex(int attr, const std::string& table, BTreeIndex &btre
     return rc;
   }
 
-
-  //loop over the specified conditions (assuming AND logic between conditions)
-  int cond_length = cond.size();
-  for (int i=0;i<cond_length;i++) {
-    if (cond[i].attr==1) {
-      int cur_key = atoi(cond[i].value);
+  // loop over the specified conditions (assuming AND logic between conditions)
+  for (unsigned i = 0; i < cond.size(); i++) {
+    if (cond[i].attr == 1) { // WHERE clause fragment is using key (cond.attr == 1)
+      int current_key = atoi(cond[i].value);
       switch (cond[i].comp) {
         case SelCond::EQ:
-          if (EQ_active && key_exact != cur_key) // key = val1 AND key = val2
-            logic_error=true;
-          else if (NEQ_active && key_exact == cur_key) // key = val and key <> val
-            logic_error=true;
+          if (EQ_active && key_exact != current_key) // key = val1 AND key = val2
+            logic_error = true;
+          else if (NEQ_active && key_exact == current_key) // key = val AND key <> val
+            logic_error = true;
 
-          key_exact = cur_key;    
-          EQ_active=true;
+          key_exact = current_key;    
+          EQ_active = true;
 
-          break; // break right away? that means you do not handle the logic error..
+          break;
         case SelCond::NE:
-          if (EQ_active && key_exact == cur_key)
-            logic_error=true;
+          if (EQ_active && key_exact == current_key)  // key = val AND key <> val
+            logic_error = true;
 
-          key_neq_vals.push_back(cur_key);
-          NEQ_active=true;
+          key_neq_vals.push_back(current_key);
+          NEQ_active = true;
 
-          break; // break right away? that means you do not handle the logic error..
-        case SelCond::GT: //keep greatest key min value
-          if (key_min<cur_key)
-            key_min=cur_key;
+          break;
+        case SelCond::GT: // keep greatest key min value
+          if (key_min < current_key)
+            key_min = current_key;
 
           break;
         case SelCond::GE:
-          cur_key--; //turn GE into GT (since keys are integers)
-          if (key_min<cur_key)
-            key_min=cur_key;
+          current_key--; // turn GE into GT (since keys are integers)
+          if (key_min < current_key)
+            key_min = current_key;
           
           break;
-        case SelCond::LT:  //keep lowest key max value
-          if (key_max>cur_key)
-            key_max=cur_key;
+        case SelCond::LT:  // keep lowest key max value
+          if (key_max > current_key)
+            key_max = current_key;
           
           break;
         case SelCond::LE:
-          cur_key++;
-          if (key_max>cur_key)
-            key_max=cur_key;
+          current_key++;
+          if (key_max > current_key)
+            key_max = current_key;
           
           break;
-        }
-
-    } else { //attr == 2
-      val_cond=true;
-      //only considered == and != right now
-      string cur_value(cond[i].value);
+      }
+    } else { // attr == 2, on value = "some string"
+      val_cond = true;
+      // only considered == and != right now
+      string current_value(cond[i].value);
       switch (cond[i].comp) {
-
         case SelCond::EQ:
-          if (val_EQ_active && val_exact != cur_value) {
-            // values are not equal and eq_active
-            logic_error=true;
-          } else if (val_NEQ_active && val_exact == cur_value) {
-            //values are equal and neq_active
-            logic_error=true;
-          }
+          if (val_EQ_active && val_exact != current_value) // values are not equal and eq_active
+            logic_error = true;
+          else if (val_NEQ_active && val_exact == current_value)  // values are equal and neq_active
+            logic_error = true;
 
           val_exact.assign(cond[i].value);
-          val_EQ_active=true;
+          val_EQ_active = true;
 
           break;
         case SelCond::NE:
-        if (val_EQ_active && val_exact == cur_value) //logic error
-            logic_error=true;
+        if (val_EQ_active && val_exact == current_value) // logic error
+            logic_error = true;
 
-          val_neq_vals.push_back(cur_value);
-          val_NEQ_active=true;
+          val_neq_vals.push_back(current_value);
+          val_NEQ_active = true;
 
           break;
         default:
-          printf("\nInvalid condition %d (which is not EQ or NEQ) detected with attr=2",cond[i].comp);
-          logic_error=true;
+          if (DEBUG) printf("\nInvalid condition %d (which is not EQ or NEQ) detected with attr=2",cond[i].comp);
+          logic_error = true;
           break;
-
       }
     }
   }
+
+  if (DEBUG) printf("SQLENGINE -- Conditions have been determined:\n");
+  if (DEBUG) printf("key_min = %d, key_max = %d, key_exact = %d;\n", key_min, key_max, key_exact);
+  if (DEBUG) printf("EQ_active = %d, NEQ_active = %d\n", EQ_active, NEQ_active);
 
   /***********************************************************/
   /* Conditions have been determined - time to run the query */
   /***********************************************************/
 
-  //run the query only if no logic error
+  // run the query only if no logic error
   if (!logic_error) {
-    //note that equality of a key takes precedence over all other comparators
-    if (!EQ_active) {
-      btree.locate(key_min,cursor, 0);
-      btree.locate(key_max,end_cursor, 0);
-    } else { //equality is active
-      btree.locate(key_exact,cursor, 0);
-      btree.readForward(cursor, key, rid);
+    // note that equality of a key takes precedence over all other comparators
+    if (!EQ_active) { // EQuality NOT active
+      btree.locate(key_min, cursor, 0);
+      btree.locate(key_max, end_cursor, 0);
 
-      if (key==key_exact){
+      if (DEBUG) printf("EQuality NOT active, located key min at cursor.pid = %d, cursor.eid = %d\n", cursor.pid, cursor.eid);
+      if (DEBUG) printf("EQuality NOT active, located key max at end_cursor.pid = %d, end_cursor.eid = %d\n", end_cursor.pid, end_cursor.eid);
+
+      // int key_lowerbound = INT_MIN;
+      // int key_upperbound = INT_MAX;
+      // IndexCursor locateMaxKeyCursor = end_cursor;
+      // locateMaxKeyCursor.eid--;
+      // btree.readForward(cursor, key_lowerbound, rid); // update key_min
+      // btree.readForward(locateMaxKeyCursor, key_upperbound, rid); // update key_max
+      // if (DEBUG) printf("EQuality NOT active, UPDATED key_lowerbound = %d, key_upperbound = %d\n", key_lowerbound , key_upperbound );
+      // cursor.eid--;
+
+    } else { // equality is active
+      btree.locate(key_exact, cursor, 0);
+
+      if (DEBUG) printf("EQuality active, located key_exact at cursor.pid = %d, cursor.eid = %d\n", cursor.pid, cursor.eid);
+
+      btree.readForward(cursor, key, rid); // read the key and rid out
+
+      if (key == key_exact) { // the key we want to find exists
         if ((rc = rf.read(rid, key, value)) < 0) {
           fprintf(stderr, "Error: while reading a tuple from table %s\n", table.c_str());
           rf.close();
           return rc;
         }
 
-        //determine type of print
+        // determine type of print
         switch (attr) {
             case 1:  // SELECT key
               fprintf(stdout, "%d\n", key);
@@ -191,55 +205,59 @@ RC SqlEngine::selectOnIndex(int attr, const std::string& table, BTreeIndex &btre
             case 3:  // SELECT *
               fprintf(stdout, "%d '%s'\n", key, value.c_str());
               break;
-            case 4:
-              fprintf(stdout, "%d\n", 1);
+            case 4:  // SELECT COUNT(*)
+              fprintf(stdout, "%d\n", 1);  // is it correct that we only read 1 page???
               break;
-            
         }
+      } else {
+        // do some thing to prompt error
       }
 
       rf.close();
       return 0;
-
     }
-
 
     const int neq_val_len = val_neq_vals.size();
     const int neq_key_len = key_neq_vals.size();
 
-    int count=0;
-    //need to condider how this is handled if eq is active
-    //right now assuming eq will not be active (only neq here)
-    while(btree.readForward(cursor, key, rid)==0) {
-      if ((cursor.pid == end_cursor.pid) && (cursor.eid==end_cursor.eid))
-        return 0; //done
+    int count = 0;
+    // need to condider how this is handled if eq is active
+    // right now assuming eq will not be active (only neq here)
+    while(btree.readForward(cursor, key, rid) == 0) {
+      if (DEBUG) printf("readForward, currently key = %d, rid.pid = %d, rid.sid = %d\n", key, rid.pid, rid.sid);
+      if (DEBUG) printf("Searching, lower bound at cursor.pid = %d, cursor.eid = %d\n", cursor.pid, cursor.eid);
+      if (DEBUG) printf("Searching, upper bound at end_cursor.pid = %d, end_cursor.eid = %d\n", end_cursor.pid, end_cursor.eid);
+      if (DEBUG) printf("Searching, currently read count = %d\n", count);
 
-      if ((rc = rf.read(rid, key, value)) < 0) {
-        fprintf(stderr, "Error: while reading a tuple from table %s\n", table.c_str());
-        rf.close();
-        return rc;
-      }
-
-      //need to check eq and neq on key and value
-      bool violation=false;
-
-      //check if key violates conditions
-      if (NEQ_active) {
-        for (int i=0;i<neq_key_len;i++) {
-            if (key_neq_vals[i]==key) //if keys equal
-              violation=true; 
+      if (attr != 4) { //we don't need to read tuples when doing count(*)!!
+        if ((rc = rf.read(rid, key, value)) < 0) {
+          fprintf(stderr, "Error: while reading a tuple from table %s\n", table.c_str());
+          rf.close();
+          return rc;
         }
       }
-      //check if value violates conditions
+
+      // need to check eq and neq on key and value
+      bool violation = false;
+
+      // if(key < key_min) continue;
+      // if(key > key_max) break;
+      // check if key violates conditions
+      if (NEQ_active) {
+        for (int i = 0; i < neq_key_len; i++) {
+            if (key_neq_vals[i] == key) // if keys equal
+              violation = true; // continue;
+        }
+      }
+      // check if value violates conditions
       if (val_NEQ_active) {
-        for (int i=0;i<neq_val_len;i++) {
-            if (val_neq_vals[i]==value)//if strings equal
-              violation=true;
+        for (int i = 0; i < neq_val_len; i++) {
+            if (val_neq_vals[i] == value) // if strings equal
+              violation = true;// continue;
         }
       }
 
       if (!violation) {
-
         //determine type of print
         switch (attr) {
             case 1:  // SELECT key
@@ -251,30 +269,31 @@ RC SqlEngine::selectOnIndex(int attr, const std::string& table, BTreeIndex &btre
             case 3:  // SELECT *
               fprintf(stdout, "%d '%s'\n", key, value.c_str());
               break;
-            
-
         }
         count++;
       } else {
-        continue; //violation of tuple, continue read forward
+        printf("There is violation in the query\n");
+        continue; // violation of tuple, continue read forward
       }
 
+      if ((cursor.pid == end_cursor.pid) && (cursor.eid == end_cursor.eid))
+        // return 0; //done
+      break;
+      // if ((cursor.pid > end_cursor.pid) || (cursor.eid > end_cursor.eid))
+      //   // return 0; //done
+      //   break;
 
     }
 
-    if (attr==4) {
+    if (attr == 4) {
       fprintf(stdout, "%d\n", count);
     }
-
-
   } else {
     printf("\nLogic Error detected in select conditions");
   }
 
   rf.close();
   return 0;
-
-
 }
 
 RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
@@ -282,7 +301,6 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
   RecordFile rf;   // RecordFile containing the table
   RecordId   rid;  // record cursor for table scanning
   BTreeIndex btree; // BTree index
-  
 
   RC     rc;
   int    key;     
@@ -293,21 +311,13 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
   string index_file = table + ".idx";
   rc = btree.open((index_file).c_str(), 'r');
 
-  //if index file successfully opens - use index select method
+  // if index file successfully opens - use index select method
   if (rc == 0) { 
-    rc=selectOnIndex(attr, table, btree, cond);
+    rc = selectOnIndex(attr, table, btree, cond);
     return rc;
   }
 
-
-  // open the table file
-  if ((rc = rf.open(table + ".tbl", 'r')) < 0) {
-    fprintf(stderr, "Error: table %s does not exist\n", table.c_str());
-    return rc;
-  }
-  // TODO : Finish index search
-  int searchkey = 0;
-
+  // otherwise, we have to search without index
   // scan the table file from the beginning
   rid.pid = rid.sid = 0;
   count = 0;
