@@ -1,0 +1,141 @@
+71,74c71,74
+< 	char *kstart = buffer + RID_SIZE;
+< 	char *end = buffer + P_SIZE;
+< 	int curKey;
+< 	int i=0;
+---
+> 	char *kstart = buffer;
+> 	char *end = buffer + (N_KEY * L_OFFSET) - K_SIZE;
+> 	int curRid = -1;
+> 	int i = 0;
+76,77c76,77
+< 	while(kstart < end) {
+< 		curKey = *(kstart);
+---
+> 	while (kstart <= end) {
+> 		curRid = *((int *) kstart);
+79c79
+< 		if (curKey == NONE) 
+---
+> 		if (curRid == NONE) 
+132c132
+< 	int N = N_PTR - 1;
+---
+> 	// int N = N_PTR - 1;
+134c134
+< 	int mid_key = N / 2;
+---
+> 	int mid_key = N_KEY / 2;
+141c141
+< 	int num_copy = N - mid_key;
+---
+> 	int num_copy = N_KEY - mid_key;
+144c144
+< 	if (pos>mid_key) {
+---
+> 	if (pos > mid_key) {
+149c149
+< 	char *sib_start = buffer + P_SIZE - PID_SIZE - (num_copy * L_OFFSET);
+---
+> 	char *sib_start = buffer + ((N_KEY - num_copy) * L_OFFSET);
+154c154
+< 	if (pos>mid_key) {
+---
+> 	if (pos > mid_key) {
+183c183
+< 	int i=0;
+---
+> 	int i = 0;
+218,219c218,219
+< 	char *entryStart;
+< 	entryStart = buffer + (eid * L_OFFSET);
+---
+> 	char *entryStart = buffer + (eid * L_OFFSET);
+> 	char *end = buffer + P_SIZE;
+220a221,222
+> 	if (buffer > end)
+> 		return RC_INVALID_CURSOR;
+238c240
+< 	return *((PageId *) (buffer + P_SIZE - PID_SIZE));
+---
+> 	return *((PageId *) (buffer + L_OFFSET * N_KEY));
+251c253
+< 	*((PageId *) (buffer + P_SIZE - PID_SIZE)) = pid;
+---
+> 	*((PageId *) (buffer + L_OFFSET * N_KEY)) = pid;
+310,312c312,313
+< 	char *kstart = buffer;
+< 	// char *end = buffer+P_SIZE-PID_SIZE;
+< 	char *end = buffer + (N_KEY * NL_OFFSET);
+---
+> 	char *kstart = buffer + NL_OFFSET;
+> 	char *end = buffer + (N_KEY * NL_OFFSET) + PID_SIZE;
+316c317
+< 	while(kstart <= end) {
+---
+> 	while (kstart <= end) {
+319,321c320
+< 		if (curPid == NONE && (*((int *) (kstart - PID_SIZE)) == NONE)) {
+< 			return max(0, i - 1);
+< 		} else if (curPid == NONE) {
+---
+> 		if(curPid == NONE)
+323d321
+< 		}
+342c340,342
+< 	BTNonLeafNode::locate(key,pos);
+---
+> 	BTNonLeafNode::locate(key, pos);
+>     // printf("BTNonLeafNode::insert() - located pos = %d\n", pos);
+>     // printf("BTNonLeafNode::insert() - CHECKPOINT getKeyCount = %d keys\n", getKeyCount());
+345c345
+< 	char *loc = buffer + pos * NL_OFFSET;
+---
+> 	char *loc = buffer + PID_SIZE + pos * NL_OFFSET;
+352,354d351
+< 	memcpy(loc, &pid, PID_SIZE);
+< 	// printf("copy <key = %d> in inserted pair\n", key);
+< 	loc += PID_SIZE;
+356c353,355
+< 
+---
+> 	loc += K_SIZE;
+> 	memcpy(loc, &pid, PID_SIZE);
+>     
+371a371
+> 	insert(key, pid);
+373,378c373,376
+< 	int mid_key = N_KEY / 2;
+< 
+< 	int pos;
+< 	locate(key, pos);
+< 	
+< 	// pointer to start of right half
+---
+> 	int mid_key = (N_KEY + 1) / 2;
+> 	char *loc = buffer + PID_SIZE + (mid_key * NL_OFFSET);
+> 	memcpy(&midKey, loc, K_SIZE);
+> 	char *sib_start = loc + K_SIZE;
+379a378,379
+> 	sibling.initBuffer(sib_start, ((num_copy * NL_OFFSET) + PID_SIZE));
+> 	memset(loc, NONE, ((num_copy + 1) * NL_OFFSET));
+381,399d380
+< 	if (pos > mid_key) {
+< 		num_copy--;
+< 	}
+< 
+< 	// TODO: May have bug regarding keep the last pointer pid!!
+< 	char *sib_start = buffer + ((N_KEY - num_copy) * NL_OFFSET);
+< 	sibling.initBuffer(sib_start, num_copy * NL_OFFSET);
+< 	memset(sib_start, NONE, num_copy * NL_OFFSET);
+< 
+< 	if (pos > mid_key) {
+< 		// insert in sibling
+< 		sibling.insert(key, pid);
+< 	} else {
+< 		// insert in current node
+< 		insert(key, pid);
+< 	}
+< 	
+< 	PageId siblingPid;
+< 	sibling.readEntry(0, midKey, siblingPid);

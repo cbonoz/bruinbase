@@ -1,0 +1,68 @@
+First we used the diff command to record the difference of our current submission with the original submission in the earlier parts:
+
+$ diff BTreeIndex.cc BTreeIndexd.cc > diff-BTreeIndex-cc.txt
+$ diff BTreeIndex.h BTreeIndexd.h > diff-BTreeIndex-h.txt
+$ diff BTreeNode.h BTreeNoded.h > diff-BTreeNode-h.txt
+$ diff BTreeNode.cc BTreeNoded.cc > diff-BTreeNode-cc.txt
+
+The results in these diff are:
+
+======================
+diff-BTreeIndex-cc.txt
+Compares BTreeIndexd.cc (part-2d) with BTreeIndex.cc (part-2c)
+BTreeIndex.cc (part-2c) -- 546 lines
+======================
+89 lines of addition "> "
+163 lines of deletion "< "
+----
+17 spots of changes "\dc\d"
+2 spots of additions "\da\d"
+8 spots of deletions "\dd\d"
+----
+total 252 diff lines, 27 diff spots
+
+==> less than 50% change of codes!
+
+======================
+diff-BTreeIndex-h.txt
+Compares BTreeIndexd.h (part-2d) with BTreeIndex.h (part-2c)
+BTreeIndex.h (part-2c) -- 124 lines
+======================
+2 lines of addition "> "
+----
+1 spots of deletions "\da\d"
+----
+total 2 diff lines, 1 diff spots
+
+==> less than 50% change of codes!
+
+======================
+diff-BTreeNode-cc.txt
+Compares BTreeNoded.cc (part-2d) with BTreeNode.cc (part-2b)
+BTreeNode.cc (part-2b) -- 511 lines
+======================
+44 lines of addition "> "
+58 lines of deletion "< "
+----
+20 spots of changes "\dc\d"
+3 spots of additions "\da\d"
+3 spots of deletions "\dd\d"
+----
+total 102 diff lines, 26 diff spots
+
+==> less than 50% change of codes!
+
+======================
+diff-BTreeNode-h.txt
+Compares BTreeNoded.h (part-2d) with BTreeNode.h (part-2b)
+BTreeNode.h (part-2b) -- 328 lines
+======================
+4 lines of deletion "> "
+----
+2 spots of additions "\da\d"
+----
+total 4 diff lines, 2 diff spots
+
+==> less than 50% change of codes!
+
+Thus, we believe that our submission does not violate the 50% change of codes penalty.

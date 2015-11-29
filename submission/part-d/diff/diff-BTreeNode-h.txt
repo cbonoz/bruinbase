@@ -1,0 +1,6 @@
+21a22
+> #include <string.h>
+324a326,328
+>     // char *bufferStart;
+>     
+>     

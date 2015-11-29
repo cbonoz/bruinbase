@@ -1,0 +1,291 @@
+15d14
+< #define DEBUG 0
+137d135
+<     int insertAtLevel = 1;
+142d139
+<     if (DEBUG) printf("BTreeIndex::insertInParent() - insert siblingPid = %d\n", siblingPid);
+147d143
+<     if (DEBUG) printf("BTreeIndex::insertInParent() - currentPid = %d\n", currentPid);
+149,169c145,147
+<     if (currentPid == rootPid) { // if current node is already the root node
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - current node is already the root node\n");
+<         bool isFull = false;
+<         if (treeHeight == 1) {
+<             // // current node is a leaf node, so we want to create a
+<             // // new root node (a nonleaf node) and initialize it
+<             // isFull = true;
+<             // BTLeafNode newSiblingNode;
+<             // PageId newSiblingPid = pf.endPid();
+<             // int newSiblingKey;
+<                 
+<             BTNonLeafNode newRootNode;
+<             newRootNode.initializeRoot(currentPid, siblingKey, siblingPid);
+<             PageId newRootPid = pf.endPid();
+<             ret = newRootNode.write(newRootPid, pf);
+<             if (ret != 0) {
+<                 return ret; // RC_FILE_WRITE_FAILED;
+<             }
+<             rootPid = newRootPid;
+<             treeHeight++;
+<             insertAtLevel++;
+---
+>     // get pid of the parent node of the current node
+>     PageId parentPid = path.back(); 
+>     path.pop_back();
+171,188c149,173
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - current leaf root node is a leaf node, create a new root node now\n");
+<             return ret;
+<         } else {
+<             BTNonLeafNode currentNode;  // otherwise, current root node must be a nonleaf node
+<             currentNode.read(currentPid, pf);
+<             if (currentNode.getKeyCount() >= N_KEY) {
+<                 isFull = true;
+<                 if (DEBUG) printf("BTreeIndex::insertInParent() - current key # is %d\n", currentNode.getKeyCount());
+<                 if (DEBUG) printf("BTreeIndex::insertInParent() - current nonleaf root node is full, create a new root node now\n");
+<             } else {
+<                 if (DEBUG) printf("BTreeIndex::insertInParent() - current key # is %d\n", currentNode.getKeyCount());
+<                 if (DEBUG) printf("BTreeIndex::insertInParent() - current nonleaf root node is NOT full, insert safely\n");
+<                 currentNode.insert(siblingKey, siblingPid);
+<                 ret = currentNode.write(currentPid, pf);
+<                 if (ret != 0) {
+<                     return ret; // RC_FILE_WRITE_FAILED;
+<                 }
+<             }
+---
+>     if (parentPid > 0 && parentPid != rootPid) { // current node is not a root node, it has a parent, so recursively insert into current node's parent
+>         BTNonLeafNode parentNode;
+>         ret = parentNode.read(parentPid, pf);
+>         if (ret != 0) { return ret; } // RC_FILE_READ_FAILED;
+>         
+>         if (parentNode.getKeyCount() < N_KEY) { // if there is space in the parent node
+>             parentNode.insert(siblingKey, siblingPid);
+>             ret = parentNode.write(parentPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;    
+>         } else { // no space in the parent node -- split
+>             PageId newSiblingPid = pf.endPid();
+>             BTNonLeafNode newSiblingNode;
+>             int newSiblingKey;
+> 
+>             // no space in the parent node
+>             parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey);
+> 
+>             ret = newSiblingNode.write(newSiblingPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+>             ret = parentNode.write(parentPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+> 
+>             path.push_back(parentPid); // push currentNode pid in the vector
+>             path.push_back(newSiblingPid); // push new sibling node pid in the vector
+>             ret = insertInParent(path, newSiblingKey);
+189a175,194
+>     } else if (parentPid > 0 && parentPid == rootPid) { // else, insert into current node's parent, which is a root node
+>         BTNonLeafNode parentNode;
+>         ret = parentNode.read(parentPid, pf);
+>         if (ret != 0) { return ret; } // RC_FILE_READ_FAILED;
+>         
+>         if (parentNode.getKeyCount() < N_KEY) { // if there is space in the parent node
+>             parentNode.insert(siblingKey, siblingPid);
+>             ret = parentNode.write(parentPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+>         } else { // no space in the parent node -- split
+>             PageId newSiblingPid = pf.endPid();
+>             BTNonLeafNode newSiblingNode;
+>             int newSiblingKey;
+> 
+>             parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey); // no space in the parent node
+> 
+>             ret = newSiblingNode.write(newSiblingPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+>             ret = parentNode.write(parentPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+191,194d195
+<         if (isFull) {
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - isFull: current root node is full, create a new root\n");
+<             BTNonLeafNode rootNode;
+<             rootNode.initializeRoot(currentPid, siblingKey, siblingPid);
+196,197c197,198
+<             
+<             insertAtLevel++;
+---
+>             BTNonLeafNode rootNode;
+>             rootNode.initializeRoot(parentPid, newSiblingKey, newSiblingPid);
+200,205c201
+<             if (ret != 0) {
+<                 return ret; // RC_FILE_WRITE_FAILED;
+<             }
+< 
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - the new root node is:\n");
+<             rootNode.printKeys();
+---
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+210,266d205
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - the new rootPid = %d, treeHeight = %d:\n", newRootPid, treeHeight);
+< 
+<             return ret;
+<         }
+< 
+<         return ret;
+<     }
+< 
+<     // else, insert into current node's parent
+<     if (DEBUG) printf("BTreeIndex::insert() - else, insert into current node's parent\n");
+<     // get pid of the parent node of the current node
+<     PageId parentPid = path.back(); 
+<     path.pop_back();
+<     if (DEBUG) printf("BTreeIndex::insertInParent() - parentPid = %d\n", parentPid);
+< 
+<     BTNonLeafNode parentNode;
+<     ret = parentNode.read(parentPid, pf);
+<     if (ret != 0) {
+<         return ret; // RC_FILE_READ_FAILED;
+<     }
+< 
+<     if (DEBUG) printf("BTreeIndex::insertInParent() - the parent node is:\n");
+<     parentNode.printKeys();
+< 
+<     if (parentNode.getKeyCount() < N_KEY) { // if there is space in the parent node
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - current parent has %d keys\n", parentNode.getKeyCount());
+<         parentNode.insert(siblingKey, siblingPid);
+<         ret = parentNode.write(parentPid, pf);
+<         if (ret != 0) {
+<             return ret; // RC_FILE_WRITE_FAILED;
+<         }
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - not full, after insert, the parent node is:\n");
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - current parent has %d keys\n", parentNode.getKeyCount());
+<         parentNode.printKeys();
+<     } else { // no space in the parent node -- split
+<         PageId newSiblingPid = pf.endPid();
+<         BTNonLeafNode newSiblingNode;
+<         int newSiblingKey;
+< 
+<         insertAtLevel++;
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - no space, should split - current parent has %d keys\n", parentNode.getKeyCount());
+< 
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - in the trouble, the siblingKey = %d\n", siblingKey);
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - in the trouble, the newSiblingPid = %d\n", newSiblingPid);
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - in the trouble, the currentPid = %d\n", parentPid);
+< 
+<         // no space in the parent node
+<         parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey);
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - executed insertAndSplit\n");
+< 
+<         ret = newSiblingNode.write(newSiblingPid, pf);
+<         if (ret != 0) {
+<             return ret; // RC_FILE_WRITE_FAILED;
+<         }
+<         ret = parentNode.write(parentPid, pf);
+<         if (ret != 0) {
+<             return ret; // RC_FILE_WRITE_FAILED;
+269,292c208,210
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - node full, after insert, the parent node is:\n");
+<         parentNode.printKeys();
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - node full, after insert, the new sibling node of the parent is:\n");
+<         newSiblingNode.printKeys();
+< 
+<         if (treeHeight <= insertAtLevel) {
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - hey! you increased the level\n");
+<             // get pid of the parent node of the current node
+<             BTNonLeafNode newGrandRootNode;
+<             newGrandRootNode.initializeRoot(parentPid, newSiblingKey, newSiblingPid);
+<             PageId newGrandRootPid = pf.endPid();
+<             ret = newGrandRootNode.write(newGrandRootPid, pf);
+<             if (ret != 0) {
+<                 return ret; // RC_FILE_WRITE_FAILED;
+<             }
+<             // push newGrandRootNode pid in the vector
+<             path.push_back(newGrandRootPid);
+<             // push currentNode pid in the vector
+<             path.push_back(parentPid);
+<             // push new sibling node pid in the vector
+<             path.push_back(newSiblingPid);
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - pushed grandRootPid, parentPid and newSiblingPid into the path\n");
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - grandParentPid = %d\n", newGrandRootPid);
+< 
+---
+>     } else if (currentPid == rootPid) { // if current node is already the root node
+>         BTNonLeafNode currentNode;  // current root node must be a nonleaf node now
+>         currentNode.read(currentPid, pf);
+294,295c212,218
+<         if (DEBUG) printf("BTreeIndex::insertInParent() - newGrandRootNode is:\n");
+<         newGrandRootNode.printKeys();
+---
+>         if (currentNode.getKeyCount() >= N_KEY) {
+>             PageId newRootPid = pf.endPid();
+>             BTNonLeafNode rootNode;
+>             rootNode.initializeRoot(currentPid, siblingKey, siblingPid);
+>             
+>             ret = rootNode.write(newRootPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+298c221
+<             rootPid = newGrandRootPid;
+---
+>             rootPid = newRootPid;
+300,302d222
+<             if (DEBUG) printf("\n~~~~~~~BTreeIndex::insertInParent() - NOW treeHeight is %d\n", treeHeight);
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - the new rootPid = %d, treeHeight = %d:\n", newGrandRootPid, treeHeight);
+<             return ret;
+304,309c224,226
+<             // push currentNode pid in the vector
+<             path.push_back(parentPid);
+<             // push new sibling node pid in the vector
+<             path.push_back(newSiblingPid);
+<             if (DEBUG) printf("BTreeIndex::insertInParent() - pushed parentPid and newSiblingPid into the path\n");
+<             ret = insertInParent(path, newSiblingKey);
+---
+>             currentNode.insert(siblingKey, siblingPid);
+>             ret = currentNode.write(currentPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+310a228
+>         return ret;
+354c272
+<         root.printKeys();
+---
+>         if (DEBUG) root.printKeys();
+365c283
+<     targetLeafNode.printKeys();
+---
+>     if (DEBUG) targetLeafNode.printKeys();
+368c286
+<     targetLeafNode.printKeys();
+---
+>     if (DEBUG) targetLeafNode.printKeys();
+376c294
+<         targetLeafNode.printKeys();
+---
+>         if (DEBUG) targetLeafNode.printKeys();
+399c317
+<         targetLeafNode.printKeys();
+---
+>         if (DEBUG) targetLeafNode.printKeys();
+401c319
+<         siblingLeafNode.printKeys();
+---
+>         if (DEBUG) siblingLeafNode.printKeys();
+418c336,348
+<         ret = insertInParent(path, siblingKey);
+---
+> 
+>         if (treeHeight == 1) { // if current leafnode is also the root node, we need to create a new root node, and increment the tree height
+>             PageId newRootPid = pf.endPid();
+>             BTNonLeafNode newRootNode;
+>             newRootNode.initializeRoot(targetPid, siblingKey, siblingPid);
+> 
+>             ret = newRootNode.write(newRootPid, pf);
+>             if (ret != 0) { return ret; } // RC_FILE_WRITE_FAILED;
+>             rootPid = newRootPid;
+>             treeHeight++;
+>         } else { // current leafnode is not the root node, we need to insert into its parent
+>             ret = insertInParent(path, siblingKey);
+>         }
+457,459d386
+<     // BTNonLeafNode
+<     // BTLeafNode
+<     // !!!### PROBLEM?
+467c394
+<         currentNonLeafNode.printKeys();
+---
+>         if (DEBUG) currentNonLeafNode.printKeys();
+483c410
+<     currentNode.printKeys();
+---
+>     if (DEBUG) currentNode.printKeys();
