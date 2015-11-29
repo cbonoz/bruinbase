@@ -69,16 +69,31 @@ RC BTLeafNode::write(PageId pid, PageFile& pf)
 int BTLeafNode::getKeyCount()
 {
 	char *kstart = buffer;
-	char *end = buffer + P_SIZE;
-	int curRid;
+	char *end = buffer + (N_KEY * L_OFFSET) - K_SIZE;
+	// int curRid;
+	// int i = 0;
+
+	// while(kstart < end) {
+	// 	curRid = *(kstart);
+
+	// 	if (curRid == NONE) 
+	// 		return i;
+
+	// 	kstart += L_OFFSET;
+	// 	i++;
+	// }
+
+	// return i;
+	int curRid = -1;
 	int i = 0;
 
-	while(kstart < end) {
-		curRid = *(kstart);
+	while (kstart <= end) {
+		curRid = *((int *) kstart);
 
-		if (curRid == NONE) 
+		if(curRid == NONE) {
 			return i;
-
+		}
+		
 		kstart += L_OFFSET;
 		i++;
 	}
@@ -112,6 +127,8 @@ RC BTLeafNode::insert(int key, const RecordId& rid)
 	loc += RID_SIZE;
 	// printf("copy <key = %d> in inserted pair\n", key);
 	memcpy(loc, &key, K_SIZE);
+	// printf("==BTreeNode:: the node being insert is now\n");
+	// printKeys();
 	return 0;
 }
 

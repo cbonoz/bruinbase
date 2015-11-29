@@ -224,6 +224,8 @@ RC SqlEngine::selectOnIndex(int attr, const std::string& table, BTreeIndex &btre
     // need to condider how this is handled if eq is active
     // right now assuming eq will not be active (only neq here)
     while(btree.readForward(cursor, key, rid) == 0) {
+      
+      // printf("readForward, currently key = %d\n", key);
       if (DEBUG) printf("readForward, currently key = %d, rid.pid = %d, rid.sid = %d\n", key, rid.pid, rid.sid);
       if (DEBUG) printf("Searching, lower bound at cursor.pid = %d, cursor.eid = %d\n", cursor.pid, cursor.eid);
       if (DEBUG) printf("Searching, upper bound at end_cursor.pid = %d, end_cursor.eid = %d\n", end_cursor.pid, end_cursor.eid);

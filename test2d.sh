@@ -10,5 +10,5 @@ rm -f xlarge.tbl xlarge.idx
 # clear
 
 # ./bruinbase < test.sql
-./bruinbase < test2d.sql
-# ./bruinbase < test2d.sql > debug2d.txt
+# ./bruinbase < test2d.sql
+./bruinbase < test2d.sql > debug2d.txt

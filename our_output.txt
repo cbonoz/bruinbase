@@ -19,7 +19,7 @@ Bruinbase> Bruinbase> Bruinbase> 100
 Bruinbase> 489 'Blue Hawaii'
   -- 0.000 seconds to run the select command. Read 5 pages
 Bruinbase> Bruinbase> Bruinbase> 1000
-  -- 0.000 seconds to run the select command. Read 20 pages
+  -- 0.010 seconds to run the select command. Read 20 pages
 Bruinbase> 4506 'Waterworld'
 4515 'Wedding Party, The'
 4524 'Welcome to the Dollhouse'
@@ -80,8 +80,8 @@ Bruinbase> 4506 'Waterworld'
 4732 '¡Dispara!'
 4733 'la folie'
   -- 0.000 seconds to run the select command. Read 16 pages
-Bruinbase> Bruinbase> Bruinbase> 12235
-  -- 0.010 seconds to run the select command. Read 214 pages
+Bruinbase> Bruinbase> Bruinbase> 12278
+  -- 0.010 seconds to run the select command. Read 212 pages
 Bruinbase> 4240 'Tommy Boy'
   -- 0.000 seconds to run the select command. Read 6 pages
 Bruinbase> 400 'Big One, The'

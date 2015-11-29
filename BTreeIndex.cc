@@ -154,7 +154,10 @@ RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
         }
         
         if (parentNode.getKeyCount() < N_KEY) { // if there is space in the parent node
+        if(DEBUG) printf("before insertInparent, key count = %d\n", parentNode.getKeyCount());
             parentNode.insert(siblingKey, siblingPid);
+        if(DEBUG) printf("insertInparent key = %d\n", siblingKey);
+        if(DEBUG) printf("after insertInparent, key count = %d\n", parentNode.getKeyCount());
             ret = parentNode.write(parentPid, pf);
             if (ret != 0) {
                 return ret; // RC_FILE_WRITE_FAILED;
@@ -165,7 +168,11 @@ RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
             int newSiblingKey;
 
             // no space in the parent node
+
+        if(DEBUG) printf("before insertInparent insertAndSplit, key count = %d\n", parentNode.getKeyCount());
             parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey);
+        if(DEBUG) printf("insertInparent insertAndSplit key = %d\n", siblingKey);
+        if(DEBUG) printf("after insertInparent insertAndSplit, key count = %d\n", parentNode.getKeyCount());
             
             ret = newSiblingNode.write(newSiblingPid, pf);
             if (ret != 0) {
@@ -192,7 +199,12 @@ RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
         }
         
         if (parentNode.getKeyCount() < N_KEY) { // if there is space in the parent node
+
+        if(DEBUG) printf("before insertInparent, key count = %d\n", parentNode.getKeyCount());
             parentNode.insert(siblingKey, siblingPid);
+        if(DEBUG) printf("insertInparent key = %d\n", siblingKey);
+        if(DEBUG) printf("after insertInparent, key count = %d\n", parentNode.getKeyCount());
+
             ret = parentNode.write(parentPid, pf);
             if (ret != 0) {
                 return ret; // RC_FILE_WRITE_FAILED;
@@ -203,7 +215,13 @@ RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
             int newSiblingKey;
 
             // no space in the parent node
+            // parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey);
+
+
+        if(DEBUG) printf("before insertInparent insertAndSplit, key count = %d\n", parentNode.getKeyCount());
             parentNode.insertAndSplit(siblingKey, siblingPid, newSiblingNode, newSiblingKey);
+        if(DEBUG) printf("insertInparent insertAndSplit key = %d\n", siblingKey);
+        if(DEBUG) printf("after insertInparent insertAndSplit, key count = %d\n", parentNode.getKeyCount());
 
             ret = newSiblingNode.write(newSiblingPid, pf);
             if (ret != 0) {
@@ -247,7 +265,11 @@ RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
             rootPid = newRootPid;
             treeHeight++;
         } else {
+
+        if(DEBUG) printf("before insertInparent, key count = %d\n", currentNode.getKeyCount());
             currentNode.insert(siblingKey, siblingPid);
+        if(DEBUG) printf("insertInparent key = %d\n", siblingKey);
+        if(DEBUG) printf("after insertInparent, key count = %d\n", currentNode.getKeyCount());
             ret = currentNode.write(currentPid, pf);
             if (ret != 0) {
                 return ret; // RC_FILE_WRITE_FAILED;
@@ -303,7 +325,10 @@ RC BTreeIndex::insert(int key, const RecordId& rid) // following the book algori
     
     // check if targetLeafNode is full of keys
     if (targetLeafNode.getKeyCount() < N_KEY) { // targetLeafNode is not full - insert
+        if(DEBUG) printf("\nbefore insert, key count = %d\n", targetLeafNode.getKeyCount());
         targetLeafNode.insert(key, rid);
+        if(DEBUG) printf("insert key = %d, rid.pid = %d, rid.sid = %d\n", key, rid.pid, rid.sid);
+        if(DEBUG) printf("after insert, key count = %d\n", targetLeafNode.getKeyCount());
 
         ret = targetLeafNode.write(targetPid, pf); // write back the target leaf node!!
         if (ret != 0) {
@@ -321,7 +346,11 @@ RC BTreeIndex::insert(int key, const RecordId& rid) // following the book algori
         path.push_back(siblingPid);
 
         // targetLeafNode is full - insert and split
+
+        if(DEBUG) printf("before insertAndSplit, key count = %d\n", targetLeafNode.getKeyCount());
         targetLeafNode.insertAndSplit(key, rid, siblingLeafNode, siblingKey);
+        if(DEBUG) printf("insert key = %d\n", key);
+        if(DEBUG) printf("after insertAndSplit, key count = %d\n", targetLeafNode.getKeyCount());
 
         siblingLeafNode.setNextNodePtr(targetLeafNode.getNextNodePtr());
         targetLeafNode.setNextNodePtr(siblingPid);
