@@ -19,7 +19,7 @@ Bruinbase> Bruinbase> Bruinbase> 100
 Bruinbase> 489 'Blue Hawaii'
   -- 0.000 seconds to run the select command. Read 5 pages
 Bruinbase> Bruinbase> Bruinbase> 1000
-  -- 0.010 seconds to run the select command. Read 20 pages
+  -- 0.000 seconds to run the select command. Read 20 pages
 Bruinbase> 4506 'Waterworld'
 4515 'Wedding Party, The'
 4524 'Welcome to the Dollhouse'
@@ -84,8 +84,7 @@ Bruinbase> Bruinbase> Bruinbase> 12278
   -- 0.010 seconds to run the select command. Read 212 pages
 Bruinbase> 4240 'Tommy Boy'
   -- 0.000 seconds to run the select command. Read 6 pages
-Bruinbase> 400 'Big One, The'
-402 'Big Squeeze, The'
+Bruinbase> 402 'Big Squeeze, The'
 403 'Big Tease, The'
 405 'Bigfoot: The Unforgettable Encounter'
 407 'Biker Zombies'
@@ -149,4 +148,4 @@ Bruinbase> 400 'Big One, The'
 492 'Blue Ridge Fall'
 493 'Blues Brothers 2000'
 496 'Bobby G. Cant Swim'
-  -- 0.000 seconds to run the select command. Read 73 pages
+  -- 0.000 seconds to run the select command. Read 72 pages

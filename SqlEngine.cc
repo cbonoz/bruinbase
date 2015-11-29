@@ -100,23 +100,23 @@ RC SqlEngine::selectOnIndex(int attr, const std::string& table, BTreeIndex &btre
 
           break;
         case SelCond::GT: // keep greatest key min value
+          current_key++; // turn GT into GE (since keys are integers), and because locate will give us precise location
           if (key_min < current_key)
             key_min = current_key;
 
           break;
         case SelCond::GE:
-          current_key--; // turn GE into GT (since keys are integers)
           if (key_min < current_key)
             key_min = current_key;
           
           break;
         case SelCond::LT:  // keep lowest key max value
+          current_key--;
           if (key_max > current_key)
             key_max = current_key;
           
           break;
         case SelCond::LE:
-          current_key++;
           if (key_max > current_key)
             key_max = current_key;
           
@@ -224,7 +224,7 @@ RC SqlEngine::selectOnIndex(int attr, const std::string& table, BTreeIndex &btre
     // need to condider how this is handled if eq is active
     // right now assuming eq will not be active (only neq here)
     while(btree.readForward(cursor, key, rid) == 0) {
-      
+
       // printf("readForward, currently key = %d\n", key);
       if (DEBUG) printf("readForward, currently key = %d, rid.pid = %d, rid.sid = %d\n", key, rid.pid, rid.sid);
       if (DEBUG) printf("Searching, lower bound at cursor.pid = %d, cursor.eid = %d\n", cursor.pid, cursor.eid);
@@ -278,13 +278,12 @@ RC SqlEngine::selectOnIndex(int attr, const std::string& table, BTreeIndex &btre
         continue; // violation of tuple, continue read forward
       }
 
-      if ((cursor.pid == end_cursor.pid) && (cursor.eid == end_cursor.eid))
-        // return 0; //done
-      break;
-      // if ((cursor.pid > end_cursor.pid) || (cursor.eid > end_cursor.eid))
-      //   // return 0; //done
-      //   break;
+      if ((cursor.pid == end_cursor.pid) && (cursor.eid == end_cursor.eid)) { // done
+        // rf.close();
+        // return 0;
 
+        break; // ??? should we just use break???
+      }
     }
 
     if (attr == 4) {
