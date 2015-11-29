@@ -68,15 +68,15 @@ RC BTLeafNode::write(PageId pid, PageFile& pf)
  */
 int BTLeafNode::getKeyCount()
 {
-	char *kstart = buffer + RID_SIZE;
+	char *kstart = buffer;
 	char *end = buffer + P_SIZE;
-	int curKey;
+	int curRid;
 	int i = 0;
 
 	while(kstart < end) {
-		curKey = *(kstart);
+		curRid = *(kstart);
 
-		if (curKey == NONE) 
+		if (curRid == NONE) 
 			return i;
 
 		kstart += L_OFFSET;
@@ -309,7 +309,7 @@ RC BTNonLeafNode::write(PageId pid, PageFile& pf)
  */
 int BTNonLeafNode::getKeyCount()
 {
-	char *kstart = buffer;
+	char *kstart = buffer + NL_OFFSET;
 	char *end = buffer + (N_KEY * NL_OFFSET) + PID_SIZE;
 	int curPid;
 	int i = 0;
@@ -317,9 +317,7 @@ int BTNonLeafNode::getKeyCount()
 	while (kstart <= end) {
 		curPid = *((int *) kstart);
 
-		if (curPid == NONE && (*((int *) (kstart - PID_SIZE)) == NONE)) {
-			return max(0, i - 1);
-		} else if (curPid == NONE) {
+		if(curPid == NONE) {
 			return i;
 		}
 		
@@ -327,7 +325,7 @@ int BTNonLeafNode::getKeyCount()
 		i++;
 	}
 
-	return (i > N_KEY) ? (i - 1) : i;
+	return i;
 }
 
 /*
