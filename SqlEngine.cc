@@ -317,7 +317,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
     rc = selectOnIndex(attr, table, btree, cond);
     return rc;
   }
-  printf("\nselecting without idx\n");
+  //printf("\nselecting without idx\n");
   // otherwise, we have to search without index
   // scan the table file from the beginning
   if ((rc = rf.open(table + ".tbl", 'r')) < 0) {

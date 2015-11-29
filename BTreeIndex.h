@@ -115,6 +115,11 @@ class BTreeIndex {
    */
   RC BTreeInfo();
 
+  RC newRoot(int key, PageId leftPid, PageId rightPid);
+  RC insertRec(int key, const RecordId& rid, int currHeight, PageId thisPid, int& tempKey, PageId& tempPid);
+  
+
+
  private:
   PageFile pf;         /// the PageFile used to store the actual b+tree in disk
   vector<PageId> path; /// the vector to store the path (pids) to the leaf node

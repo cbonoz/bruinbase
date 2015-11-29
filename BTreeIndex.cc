@@ -128,6 +128,10 @@ RC BTreeIndex::close()
     return ret;
 }
 
+
+
+
+
 RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
     RC ret = 0;
     // int insertAtLevel = 1;
@@ -281,6 +285,7 @@ RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
 
     return ret;
 }
+
 
 /*
  * Insert (key, RecordId) pair to the index.
