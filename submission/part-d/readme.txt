@@ -1,9 +1,3 @@
-Chris Buonocore
-904587506
-
-Zengwen Yuan
-604593014
-
 ######################################
 # CS143 Database System              #
 # Project 2, Bruinbase System        #
@@ -17,8 +11,20 @@ The outputs of our bruinbase code for the sample test cases are recorded in the 
 
 
 Part D:
+11/29/2015
 ---
-#TODO: please complete this part
+
+Comments:
+
+This part took the index implementation in Part C and adapted it into the insert and load functionality of the SQL Engine.
+
+The biggest part of this step was getting the SQL select option with index to actually use the index correctly. We mirrored the select/logic structure from the without-index case to use the index for locating records very quickly. Considering a branching factor of roughly 86 in our tree, the amount of random I/O's to find a record is reduced to log N / log 86, where N is the number of tuples in the database (a drastic improvement over the original un-indexed method for locating records).
+
+One issue we encountered was an off-by-one error in our insert comparison with keycount, causing a very subtle overwrite of seemingly-random tuples in the table (for example, the large table was missing 3 records, but everything else was loading correctly). By inserting some debug print statement into our program, we were able to find that the getKeyCount() comparison using > was causing one of the records in an insert to be overwritten, changing this to >= fixed this issue.
+
+Additional optimizations: We do initial Logic analysis that will avoid doing queries if the given conditions in a select query conflict with each other (for example, a condition like key=100 AND key=150 will automatically return NULL and not print anything). We also have the ability to easily extend to != conditions on keys even though not required in spec (note this has been commented out for the submission).
+
+Part D is functional and passes all tests defined in test.sh with acceptable page reads according to the original TA comments.
 
 
 Part C:
