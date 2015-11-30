@@ -128,10 +128,6 @@ RC BTreeIndex::close()
     return ret;
 }
 
-
-
-
-
 RC BTreeIndex::insertInParent(vector<PageId> &path, int siblingKey) {
     RC ret = 0;
     // int insertAtLevel = 1;
